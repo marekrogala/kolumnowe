@@ -1,0 +1,64 @@
+To są czasy ze studentsa, bo teraz nie jestem w stanie się zalogować na żadną blue*, chyba wszystkie wyłączyli:)
+
+[mr277570@students exec_plan]$ for i in `seq 1 12` ; do echo ""; echo -n $i; time ./exec_plan $i q$i.ascii  > /dev/null 2> /dev/null; done
+
+1
+real	0m2.740s
+user	0m2.730s
+sys	0m0.000s
+
+2
+real	0m1.231s
+user	0m1.210s
+sys	0m0.010s
+
+3
+real	0m0.703s
+user	0m0.670s
+sys	0m0.010s
+
+4
+real	0m1.806s
+user	0m1.790s
+sys	0m0.000s
+
+5
+real	0m0.107s
+user	0m0.090s
+sys	0m0.010s
+
+6
+real	0m0.146s
+user	0m0.130s
+sys	0m0.010s
+
+7
+real	0m4.669s
+user	0m4.590s
+sys	0m0.060s
+
+8
+real	0m1.934s
+user	0m1.850s
+sys	0m0.060s
+
+9
+real	0m17.138s
+user	0m15.950s
+sys	0m0.990s
+
+10
+real	0m1.479s
+user	0m1.410s
+sys	0m0.060s
+
+11
+real	0m32.520s
+user	0m32.410s
+sys	0m0.020s
+
+12
+real	0m24.224s
+user	0m22.790s
+sys	0m1.360s
+
