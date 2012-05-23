@@ -6,19 +6,19 @@
 #include <fstream>
 #include <cstring>
 #include "MEngine.h"
+#include "node_environment.h"
 
 const int BUFF_SIZE = 10000;
 
 using namespace std;
 
 int main(int argc, char ** argv) {
-    
       GOOGLE_PROTOBUF_VERIFY_VERSION; 
 
-      if (argc != 3) {
-          cerr << "Usage " << argv[0] << " query_number path_to_protouff_file." << endl;
-          return -1;
-      }
+
+      NodeEnvironmentInterface * node_interface = CreateNodeEnvironment(argc, argv);
+      cout << node_interface -> nodes_count() << " " << node_interface -> my_node_number() << endl;
+
 
       int query_no = atoi(argv[1]);
       //int max_rows = atoi(argv[3]); // TODO remove this shit before submitting
