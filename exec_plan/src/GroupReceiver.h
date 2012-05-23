@@ -19,7 +19,9 @@ class GroupReceiver : public Operation {
 	public:
 		std::vector<void*> pull(int &rows);
 
-		GroupReceiver(NodeEnvironmentInterface *node_env, GroupByOperation &node);
+		GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperation &node);
+
+		std::vector<OperationTree::ScanOperation_Type> init();
 };
 
 }

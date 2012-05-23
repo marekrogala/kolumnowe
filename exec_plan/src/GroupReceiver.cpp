@@ -1,3 +1,5 @@
+#include <cassert.h>
+
 #include "GroupReceiver.h"
 
 namespace Engine {
@@ -10,6 +12,11 @@ GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperatio
 std::vector<void*> GroupReceiver::pull(int &rows) {
 
 
+
+}
+
+std::vector<OperationTree::ScanOperation_Type> GroupReceiver::init() {
+	assert(false);
 }
 
 }

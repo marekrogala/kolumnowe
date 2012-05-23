@@ -14,6 +14,7 @@
 #include "logger.h"
 
 using namespace std;
+using namespace Engine;
 
 void Writer(NodeEnvironmentInterface* nei) {
   char buff[20];
@@ -49,9 +50,9 @@ int main(int argc, char** argv) {
   OperationTree::GroupByOperation op;
     
   if (nei->my_node_number() % 2) {
-    GroupSender * sender = GroupSender(nei, NULL, op);
+    GroupSender sender(nei, NULL, op);
   } else {
-    GroupReceiver * receiver = GroupReceiver(nei, op);
+    GroupReceiver receiver(nei, op);
   }
   return 0;
 }
