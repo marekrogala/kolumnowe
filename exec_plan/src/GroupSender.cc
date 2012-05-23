@@ -5,7 +5,7 @@
 namespace Engine {
 
 GroupSender::GroupSender(NodeEnvironmentInterface *node_env, Operation *source, const OperationTree::GroupByOperation &node) : 
-	node_env_(node_env), source_(source), node_(node) {
+	Operation(node_env), node_env_(node_env), source_(source), node_(node) {
 
 	}
 
