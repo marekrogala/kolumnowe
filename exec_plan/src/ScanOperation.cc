@@ -7,6 +7,13 @@ namespace Engine {
 
 vector<OperationTree::ScanOperation_Type> ScanOperation::init() {
     if (debug) cerr << "ScanOperation::init()" << endl;
+
+	int numberOfNodes = nei -> nodes_count();
+	for(int i = nei -> my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
+		dataSources_.push_back(nei->OpenDataSourceFile(i);
+	}
+	currentFile_ = dataSources_.begin();
+
     int n = node_.column_size();
     for(int i = 0; i < n; ++i) {
         columns_.push_back(node_.column(i));
@@ -25,27 +32,65 @@ vector<void*> ScanOperation::pull(int &rows) {
     int max_rows = rows;
 
     for(int i = 0; i < n; ++i) {
-        int x;
-        switch(types_[i]) {
-            case OperationTree::ScanOperation_Type_INT:
-                x = server_ -> GetInts(columns_[i], max_rows, (int32*)buffers_[i]);
-                rows = x;
-                res.push_back(buffers_[i]);
-                break;
+        int x = 0;
+		if(currentFile_ == dataSources_.end()) {
+			rows = 0;
+			res.push_back(buffers_[i]);
+		}
+		else {
+			switch(types_[i]) {
+				case OperationTree::ScanOperation_Type_INT:
+					while(x == 0 && currentFile_ != dataSources_.end()) {
+						x = currentFile_ -> GetInts(columns_[i], max_rows, (int32*)buffers_[i]);
+						if(x > 0) {
+							rows = x;
+							res.push_back(buffers_[i]);
+						}
+						else {
+							currentFile_++;
+							if(currentFile_ == dataSources_.end()) {
+								rows = 0;
+								res.push_back(buffers_[i]);
+							}
+						}
+					}
+					break;
 
-            case OperationTree::ScanOperation_Type_DOUBLE:
-                x = max_rows;
-                x = server_ -> GetDoubles(columns_[i], max_rows, (double*)buffers_[i]);
-                rows = x;
-                res.push_back(buffers_[i]);
-                break;
+				case OperationTree::ScanOperation_Type_DOUBLE:
+					while(x == 0 && currentFile_ != dataSources_.end()) {
+						x = server_ -> GetDoubles(columns_[i], max_rows, (double*)buffers_[i]);
+						if(x > 0) {
+							rows = x;
+							res.push_back(buffers_[i]);
+						}
+						else {
+							currentFile_++;
+							if(currentFile_ == dataSources_.end()) {
+								rows = 0;
+								res.push_back(buffers_[i]);
+							}
+						}
+					}
+					break;
 
-            case OperationTree::ScanOperation_Type_BOOL:
-                x = server_ -> GetByteBools(columns_[i], max_rows, (bool*)buffers_[i]);
-                rows = x;
-                res.push_back(buffers_[i]);
-                break;
-        }
+				case OperationTree::ScanOperation_Type_BOOL:
+					while(x == 0 && currentFile_ != dataSources_.end()) {
+						x = server_ -> GetByteBools(columns_[i], max_rows, (bool*)buffers_[i]);
+						if(x > 0) {
+							rows = x;
+							res.push_back(buffers_[i]);
+						}
+						else {
+							currentFile_++;
+							if(currentFile_ == dataSources_.end()) {
+								rows = 0;
+								res.push_back(buffers_[i]);
+							}
+						}
+					}
+					break;
+			}
+		}
     }
     return res;
 }
@@ -62,8 +107,8 @@ void ScanOperation::free_buffers() {
 	assert(false);
 }
 
-ScanOperation::ScanOperation(Server * server, const OperationTree::ScanOperation &node, MemoryManager * mem_manager) :
-		node_(node), server_(server), mem_manager_(mem_manager)	 {
+ScanOperation::ScanOperation(NodeEnvironmentInterface* nei, int numberOfFiles, const OperationTree::ScanOperation &node, MemoryManager * mem_manager_) :
+		nei_(nei), numberOfFiles_(numberOfFiles), node_(node), mem_manager_(mem_manager)	 {
 }
 
 }

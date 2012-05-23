@@ -10,7 +10,7 @@ Engine::MEngine::MEngine(const OperationTree::Operation &operation, Server * ser
 
 void Engine::MEngine::run() {
     cerr << "Started running query." << endl;
-    vector<OperationTree::ScanOperation_Type> types = root_operation_ -> init();
+    vector<OperationTree::ScanOperation_Type> types = root_operation_ -> init(&consume);
 
     cerr << "Result type" << endl;
     for(int i = 0; i < types.size(); ++i) {
