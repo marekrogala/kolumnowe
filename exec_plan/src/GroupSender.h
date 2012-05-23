@@ -8,6 +8,8 @@
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
 
+namespace Engine {
+
 class GroupSender : public Operation {
 
 	private:
@@ -15,7 +17,7 @@ class GroupSender : public Operation {
 		Operation *source_;
 		std::vector<OperationTree::ScanOperation_Type> source_types_;	
 		
-
+		
 		// node of the original tree corresponding
 		const OperationTree::GroupByOperation & node_;
 
@@ -30,5 +32,7 @@ class GroupSender : public Operation {
 
 		std::vector<void*> pull(int &rows);
 };
+
+}
 
 #endif // GROUP_SENDER
