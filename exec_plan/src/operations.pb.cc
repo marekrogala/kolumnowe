@@ -13,8 +13,6 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace OperationTree {
-
 namespace {
 
 const ::google::protobuf::Descriptor* Expression_descriptor_ = NULL;
@@ -73,9 +71,10 @@ void protobuf_AssignDesc_operations_2eproto() {
       sizeof(Expression));
   Expression_Operator_descriptor_ = Expression_descriptor_->enum_type(0);
   ScanOperation_descriptor_ = file->message_type(1);
-  static const int ScanOperation_offsets_[2] = {
+  static const int ScanOperation_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScanOperation, column_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScanOperation, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ScanOperation, number_of_files_),
   };
   ScanOperation_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -227,38 +226,33 @@ void protobuf_AddDesc_operations_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020operations.proto\022\rOperationTree\"\235\003\n\nEx"
-    "pression\0224\n\010operator\030\001 \002(\0162\".OperationTr"
-    "ee.Expression.Operator\022+\n\010children\030\002 \003(\013"
-    "2\031.OperationTree.Expression\022\026\n\016constant_"
-    "int32\030\n \001(\005\022\027\n\017constant_double\030\013 \001(\001\022\025\n\r"
-    "constant_bool\030\014 \001(\010\022\021\n\tcolumn_id\030\r \001(\005\"\320"
-    "\001\n\010Operator\022\014\n\010CONSTANT\020\001\022\n\n\006COLUMN\020\002\022\006\n"
-    "\002IF\020\003\022\007\n\003ADD\020d\022\014\n\010SUBTRACT\020e\022\014\n\010MULTIPLY"
-    "\020f\022\023\n\017FLOATING_DIVIDE\020g\022\010\n\003LOG\020\226\001\022\013\n\006NEG"
-    "ATE\020\227\001\022\n\n\005LOWER\020\310\001\022\014\n\007GREATER\020\311\001\022\n\n\005EQUA"
-    "L\020\312\001\022\016\n\tNOT_EQUAL\020\313\001\022\010\n\003NOT\020\254\002\022\007\n\002OR\020\255\002\022"
-    "\010\n\003AND\020\256\002\"w\n\rScanOperation\022\016\n\006column\030\001 \003"
-    "(\005\022/\n\004type\030\002 \003(\0162!.OperationTree.ScanOpe"
-    "ration.Type\"%\n\004Type\022\007\n\003INT\020\001\022\n\n\006DOUBLE\020\002"
-    "\022\010\n\004BOOL\020\003\"l\n\020ComputeOperation\022(\n\006source"
-    "\030\001 \002(\0132\030.OperationTree.Operation\022.\n\013expr"
-    "essions\030\002 \003(\0132\031.OperationTree.Expression"
-    "\"j\n\017FilterOperation\022(\n\006source\030\001 \002(\0132\030.Op"
-    "erationTree.Operation\022-\n\nexpression\030\002 \002("
-    "\0132\031.OperationTree.Expression\"s\n\013Aggregat"
-    "ion\022-\n\004type\030\001 \002(\0162\037.OperationTree.Aggreg"
-    "ation.Type\022\031\n\021aggregated_column\030\002 \001(\005\"\032\n"
-    "\004Type\022\007\n\003SUM\020\001\022\t\n\005COUNT\020\002\"\207\001\n\020GroupByOpe"
-    "ration\022(\n\006source\030\001 \002(\0132\030.OperationTree.O"
-    "peration\022\027\n\017group_by_column\030\003 \003(\005\0220\n\014agg"
-    "regations\030\004 \003(\0132\032.OperationTree.Aggregat"
-    "ion\"\314\001\n\tOperation\022*\n\004scan\030\001 \001(\0132\034.Operat"
-    "ionTree.ScanOperation\0220\n\007compute\030\002 \001(\0132\037"
-    ".OperationTree.ComputeOperation\022.\n\006filte"
-    "r\030\003 \001(\0132\036.OperationTree.FilterOperation\022"
-    "1\n\010group_by\030\004 \001(\0132\037.OperationTree.GroupB"
-    "yOperation", 1250);
+    "\n\020operations.proto\"\201\003\n\nExpression\022&\n\010ope"
+    "rator\030\001 \002(\0162\024.Expression.Operator\022\035\n\010chi"
+    "ldren\030\002 \003(\0132\013.Expression\022\026\n\016constant_int"
+    "32\030\n \001(\005\022\027\n\017constant_double\030\013 \001(\001\022\025\n\rcon"
+    "stant_bool\030\014 \001(\010\022\021\n\tcolumn_id\030\r \001(\005\"\320\001\n\010"
+    "Operator\022\014\n\010CONSTANT\020\001\022\n\n\006COLUMN\020\002\022\006\n\002IF"
+    "\020\003\022\007\n\003ADD\020d\022\014\n\010SUBTRACT\020e\022\014\n\010MULTIPLY\020f\022"
+    "\023\n\017FLOATING_DIVIDE\020g\022\010\n\003LOG\020\226\001\022\013\n\006NEGATE"
+    "\020\227\001\022\n\n\005LOWER\020\310\001\022\014\n\007GREATER\020\311\001\022\n\n\005EQUAL\020\312"
+    "\001\022\016\n\tNOT_EQUAL\020\313\001\022\010\n\003NOT\020\254\002\022\007\n\002OR\020\255\002\022\010\n\003"
+    "AND\020\256\002\"\202\001\n\rScanOperation\022\016\n\006column\030\001 \003(\005"
+    "\022!\n\004type\030\002 \003(\0162\023.ScanOperation.Type\022\027\n\017n"
+    "umber_of_files\030\003 \002(\005\"%\n\004Type\022\007\n\003INT\020\001\022\n\n"
+    "\006DOUBLE\020\002\022\010\n\004BOOL\020\003\"P\n\020ComputeOperation\022"
+    "\032\n\006source\030\001 \002(\0132\n.Operation\022 \n\013expressio"
+    "ns\030\002 \003(\0132\013.Expression\"N\n\017FilterOperation"
+    "\022\032\n\006source\030\001 \002(\0132\n.Operation\022\037\n\nexpressi"
+    "on\030\002 \002(\0132\013.Expression\"e\n\013Aggregation\022\037\n\004"
+    "type\030\001 \002(\0162\021.Aggregation.Type\022\031\n\021aggrega"
+    "ted_column\030\002 \001(\005\"\032\n\004Type\022\007\n\003SUM\020\001\022\t\n\005COU"
+    "NT\020\002\"k\n\020GroupByOperation\022\032\n\006source\030\001 \002(\013"
+    "2\n.Operation\022\027\n\017group_by_column\030\003 \003(\005\022\"\n"
+    "\014aggregations\030\004 \003(\0132\014.Aggregation\"\224\001\n\tOp"
+    "eration\022\034\n\004scan\030\001 \001(\0132\016.ScanOperation\022\"\n"
+    "\007compute\030\002 \001(\0132\021.ComputeOperation\022 \n\006fil"
+    "ter\030\003 \001(\0132\020.FilterOperation\022#\n\010group_by\030"
+    "\004 \001(\0132\021.GroupByOperation", 1064);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "operations.proto", &protobuf_RegisterTypes);
   Expression::default_instance_ = new Expression();
@@ -418,7 +412,7 @@ bool Expression::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .OperationTree.Expression.Operator operator = 1;
+      // required .Expression.Operator operator = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -426,8 +420,8 @@ bool Expression::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::OperationTree::Expression_Operator_IsValid(value)) {
-            set_operator_(static_cast< ::OperationTree::Expression_Operator >(value));
+          if (::Expression_Operator_IsValid(value)) {
+            set_operator_(static_cast< ::Expression_Operator >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -438,7 +432,7 @@ bool Expression::MergePartialFromCodedStream(
         break;
       }
       
-      // repeated .OperationTree.Expression children = 2;
+      // repeated .Expression children = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -535,13 +529,13 @@ bool Expression::MergePartialFromCodedStream(
 
 void Expression::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .OperationTree.Expression.Operator operator = 1;
+  // required .Expression.Operator operator = 1;
   if (has_operator_()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->operator_(), output);
   }
   
-  // repeated .OperationTree.Expression children = 2;
+  // repeated .Expression children = 2;
   for (int i = 0; i < this->children_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->children(i), output);
@@ -575,13 +569,13 @@ void Expression::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Expression::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required .OperationTree.Expression.Operator operator = 1;
+  // required .Expression.Operator operator = 1;
   if (has_operator_()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->operator_(), target);
   }
   
-  // repeated .OperationTree.Expression children = 2;
+  // repeated .Expression children = 2;
   for (int i = 0; i < this->children_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -619,7 +613,7 @@ int Expression::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .OperationTree.Expression.Operator operator = 1;
+    // required .Expression.Operator operator = 1;
     if (has_operator_()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->operator_());
@@ -650,7 +644,7 @@ int Expression::ByteSize() const {
     }
     
   }
-  // repeated .OperationTree.Expression children = 2;
+  // repeated .Expression children = 2;
   total_size += 1 * this->children_size();
   for (int i = 0; i < this->children_size(); i++) {
     total_size +=
@@ -776,6 +770,7 @@ const int ScanOperation::Type_ARRAYSIZE;
 #ifndef _MSC_VER
 const int ScanOperation::kColumnFieldNumber;
 const int ScanOperation::kTypeFieldNumber;
+const int ScanOperation::kNumberOfFilesFieldNumber;
 #endif  // !_MSC_VER
 
 ScanOperation::ScanOperation()
@@ -794,6 +789,7 @@ ScanOperation::ScanOperation(const ScanOperation& from)
 
 void ScanOperation::SharedCtor() {
   _cached_size_ = 0;
+  number_of_files_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -827,6 +823,9 @@ ScanOperation* ScanOperation::New() const {
 }
 
 void ScanOperation::Clear() {
+  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    number_of_files_ = 0;
+  }
   column_.Clear();
   type_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -861,7 +860,7 @@ bool ScanOperation::MergePartialFromCodedStream(
         break;
       }
       
-      // repeated .OperationTree.ScanOperation.Type type = 2;
+      // repeated .ScanOperation.Type type = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -870,8 +869,8 @@ bool ScanOperation::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::OperationTree::ScanOperation_Type_IsValid(value)) {
-            add_type(static_cast< ::OperationTree::ScanOperation_Type >(value));
+          if (::ScanOperation_Type_IsValid(value)) {
+            add_type(static_cast< ::ScanOperation_Type >(value));
           } else {
             mutable_unknown_fields()->AddVarint(2, value);
           }
@@ -880,12 +879,28 @@ bool ScanOperation::MergePartialFromCodedStream(
                       WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedEnumNoInline(
                  input,
-                 &::OperationTree::ScanOperation_Type_IsValid,
+                 &::ScanOperation_Type_IsValid,
                  this->mutable_type())));
         } else {
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(16)) goto parse_type;
+        if (input->ExpectTag(24)) goto parse_number_of_files;
+        break;
+      }
+      
+      // required int32 number_of_files = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_number_of_files:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &number_of_files_)));
+          set_has_number_of_files();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -914,10 +929,15 @@ void ScanOperation::SerializeWithCachedSizes(
       1, this->column(i), output);
   }
   
-  // repeated .OperationTree.ScanOperation.Type type = 2;
+  // repeated .ScanOperation.Type type = 2;
   for (int i = 0; i < this->type_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       2, this->type(i), output);
+  }
+  
+  // required int32 number_of_files = 3;
+  if (has_number_of_files()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->number_of_files(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -934,10 +954,15 @@ void ScanOperation::SerializeWithCachedSizes(
       WriteInt32ToArray(1, this->column(i), target);
   }
   
-  // repeated .OperationTree.ScanOperation.Type type = 2;
+  // repeated .ScanOperation.Type type = 2;
   for (int i = 0; i < this->type_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->type(i), target);
+  }
+  
+  // required int32 number_of_files = 3;
+  if (has_number_of_files()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->number_of_files(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -950,6 +975,15 @@ void ScanOperation::SerializeWithCachedSizes(
 int ScanOperation::ByteSize() const {
   int total_size = 0;
   
+  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    // required int32 number_of_files = 3;
+    if (has_number_of_files()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->number_of_files());
+    }
+    
+  }
   // repeated int32 column = 1;
   {
     int data_size = 0;
@@ -960,7 +994,7 @@ int ScanOperation::ByteSize() const {
     total_size += 1 * this->column_size() + data_size;
   }
   
-  // repeated .OperationTree.ScanOperation.Type type = 2;
+  // repeated .ScanOperation.Type type = 2;
   {
     int data_size = 0;
     for (int i = 0; i < this->type_size(); i++) {
@@ -997,6 +1031,11 @@ void ScanOperation::MergeFrom(const ScanOperation& from) {
   GOOGLE_CHECK_NE(&from, this);
   column_.MergeFrom(from.column_);
   type_.MergeFrom(from.type_);
+  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    if (from.has_number_of_files()) {
+      set_number_of_files(from.number_of_files());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1013,6 +1052,7 @@ void ScanOperation::CopyFrom(const ScanOperation& from) {
 }
 
 bool ScanOperation::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000004) != 0x00000004) return false;
   
   return true;
 }
@@ -1021,6 +1061,7 @@ void ScanOperation::Swap(ScanOperation* other) {
   if (other != this) {
     column_.Swap(&other->column_);
     type_.Swap(&other->type_);
+    std::swap(number_of_files_, other->number_of_files_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1049,7 +1090,7 @@ ComputeOperation::ComputeOperation()
 }
 
 void ComputeOperation::InitAsDefaultInstance() {
-  source_ = const_cast< ::OperationTree::Operation*>(&::OperationTree::Operation::default_instance());
+  source_ = const_cast< ::Operation*>(&::Operation::default_instance());
 }
 
 ComputeOperation::ComputeOperation(const ComputeOperation& from)
@@ -1097,7 +1138,7 @@ ComputeOperation* ComputeOperation::New() const {
 void ComputeOperation::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_source()) {
-      if (source_ != NULL) source_->::OperationTree::Operation::Clear();
+      if (source_ != NULL) source_->::Operation::Clear();
     }
   }
   expressions_.Clear();
@@ -1111,7 +1152,7 @@ bool ComputeOperation::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .OperationTree.Operation source = 1;
+      // required .Operation source = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1124,7 +1165,7 @@ bool ComputeOperation::MergePartialFromCodedStream(
         break;
       }
       
-      // repeated .OperationTree.Expression expressions = 2;
+      // repeated .Expression expressions = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1157,13 +1198,13 @@ bool ComputeOperation::MergePartialFromCodedStream(
 
 void ComputeOperation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .OperationTree.Operation source = 1;
+  // required .Operation source = 1;
   if (has_source()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->source(), output);
   }
   
-  // repeated .OperationTree.Expression expressions = 2;
+  // repeated .Expression expressions = 2;
   for (int i = 0; i < this->expressions_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->expressions(i), output);
@@ -1177,14 +1218,14 @@ void ComputeOperation::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ComputeOperation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required .OperationTree.Operation source = 1;
+  // required .Operation source = 1;
   if (has_source()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->source(), target);
   }
   
-  // repeated .OperationTree.Expression expressions = 2;
+  // repeated .Expression expressions = 2;
   for (int i = 0; i < this->expressions_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1202,7 +1243,7 @@ int ComputeOperation::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .OperationTree.Operation source = 1;
+    // required .Operation source = 1;
     if (has_source()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1210,7 +1251,7 @@ int ComputeOperation::ByteSize() const {
     }
     
   }
-  // repeated .OperationTree.Expression expressions = 2;
+  // repeated .Expression expressions = 2;
   total_size += 1 * this->expressions_size();
   for (int i = 0; i < this->expressions_size(); i++) {
     total_size +=
@@ -1246,7 +1287,7 @@ void ComputeOperation::MergeFrom(const ComputeOperation& from) {
   expressions_.MergeFrom(from.expressions_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_source()) {
-      mutable_source()->::OperationTree::Operation::MergeFrom(from.source());
+      mutable_source()->::Operation::MergeFrom(from.source());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1308,8 +1349,8 @@ FilterOperation::FilterOperation()
 }
 
 void FilterOperation::InitAsDefaultInstance() {
-  source_ = const_cast< ::OperationTree::Operation*>(&::OperationTree::Operation::default_instance());
-  expression_ = const_cast< ::OperationTree::Expression*>(&::OperationTree::Expression::default_instance());
+  source_ = const_cast< ::Operation*>(&::Operation::default_instance());
+  expression_ = const_cast< ::Expression*>(&::Expression::default_instance());
 }
 
 FilterOperation::FilterOperation(const FilterOperation& from)
@@ -1359,10 +1400,10 @@ FilterOperation* FilterOperation::New() const {
 void FilterOperation::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_source()) {
-      if (source_ != NULL) source_->::OperationTree::Operation::Clear();
+      if (source_ != NULL) source_->::Operation::Clear();
     }
     if (has_expression()) {
-      if (expression_ != NULL) expression_->::OperationTree::Expression::Clear();
+      if (expression_ != NULL) expression_->::Expression::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1375,7 +1416,7 @@ bool FilterOperation::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .OperationTree.Operation source = 1;
+      // required .Operation source = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1388,7 +1429,7 @@ bool FilterOperation::MergePartialFromCodedStream(
         break;
       }
       
-      // required .OperationTree.Expression expression = 2;
+      // required .Expression expression = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1420,13 +1461,13 @@ bool FilterOperation::MergePartialFromCodedStream(
 
 void FilterOperation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .OperationTree.Operation source = 1;
+  // required .Operation source = 1;
   if (has_source()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->source(), output);
   }
   
-  // required .OperationTree.Expression expression = 2;
+  // required .Expression expression = 2;
   if (has_expression()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->expression(), output);
@@ -1440,14 +1481,14 @@ void FilterOperation::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* FilterOperation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required .OperationTree.Operation source = 1;
+  // required .Operation source = 1;
   if (has_source()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->source(), target);
   }
   
-  // required .OperationTree.Expression expression = 2;
+  // required .Expression expression = 2;
   if (has_expression()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1465,14 +1506,14 @@ int FilterOperation::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .OperationTree.Operation source = 1;
+    // required .Operation source = 1;
     if (has_source()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->source());
     }
     
-    // required .OperationTree.Expression expression = 2;
+    // required .Expression expression = 2;
     if (has_expression()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1507,10 +1548,10 @@ void FilterOperation::MergeFrom(const FilterOperation& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_source()) {
-      mutable_source()->::OperationTree::Operation::MergeFrom(from.source());
+      mutable_source()->::Operation::MergeFrom(from.source());
     }
     if (from.has_expression()) {
-      mutable_expression()->::OperationTree::Expression::MergeFrom(from.expression());
+      mutable_expression()->::Expression::MergeFrom(from.expression());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1652,7 +1693,7 @@ bool Aggregation::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .OperationTree.Aggregation.Type type = 1;
+      // required .Aggregation.Type type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1660,8 +1701,8 @@ bool Aggregation::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::OperationTree::Aggregation_Type_IsValid(value)) {
-            set_type(static_cast< ::OperationTree::Aggregation_Type >(value));
+          if (::Aggregation_Type_IsValid(value)) {
+            set_type(static_cast< ::Aggregation_Type >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -1706,7 +1747,7 @@ bool Aggregation::MergePartialFromCodedStream(
 
 void Aggregation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .OperationTree.Aggregation.Type type = 1;
+  // required .Aggregation.Type type = 1;
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->type(), output);
@@ -1725,7 +1766,7 @@ void Aggregation::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Aggregation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required .OperationTree.Aggregation.Type type = 1;
+  // required .Aggregation.Type type = 1;
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->type(), target);
@@ -1747,7 +1788,7 @@ int Aggregation::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .OperationTree.Aggregation.Type type = 1;
+    // required .Aggregation.Type type = 1;
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
@@ -1848,7 +1889,7 @@ GroupByOperation::GroupByOperation()
 }
 
 void GroupByOperation::InitAsDefaultInstance() {
-  source_ = const_cast< ::OperationTree::Operation*>(&::OperationTree::Operation::default_instance());
+  source_ = const_cast< ::Operation*>(&::Operation::default_instance());
 }
 
 GroupByOperation::GroupByOperation(const GroupByOperation& from)
@@ -1896,7 +1937,7 @@ GroupByOperation* GroupByOperation::New() const {
 void GroupByOperation::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_source()) {
-      if (source_ != NULL) source_->::OperationTree::Operation::Clear();
+      if (source_ != NULL) source_->::Operation::Clear();
     }
   }
   group_by_column_.Clear();
@@ -1911,7 +1952,7 @@ bool GroupByOperation::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .OperationTree.Operation source = 1;
+      // required .Operation source = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1946,7 +1987,7 @@ bool GroupByOperation::MergePartialFromCodedStream(
         break;
       }
       
-      // repeated .OperationTree.Aggregation aggregations = 4;
+      // repeated .Aggregation aggregations = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1979,7 +2020,7 @@ bool GroupByOperation::MergePartialFromCodedStream(
 
 void GroupByOperation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .OperationTree.Operation source = 1;
+  // required .Operation source = 1;
   if (has_source()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->source(), output);
@@ -1991,7 +2032,7 @@ void GroupByOperation::SerializeWithCachedSizes(
       3, this->group_by_column(i), output);
   }
   
-  // repeated .OperationTree.Aggregation aggregations = 4;
+  // repeated .Aggregation aggregations = 4;
   for (int i = 0; i < this->aggregations_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->aggregations(i), output);
@@ -2005,7 +2046,7 @@ void GroupByOperation::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* GroupByOperation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required .OperationTree.Operation source = 1;
+  // required .Operation source = 1;
   if (has_source()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -2018,7 +2059,7 @@ void GroupByOperation::SerializeWithCachedSizes(
       WriteInt32ToArray(3, this->group_by_column(i), target);
   }
   
-  // repeated .OperationTree.Aggregation aggregations = 4;
+  // repeated .Aggregation aggregations = 4;
   for (int i = 0; i < this->aggregations_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -2036,7 +2077,7 @@ int GroupByOperation::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .OperationTree.Operation source = 1;
+    // required .Operation source = 1;
     if (has_source()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -2054,7 +2095,7 @@ int GroupByOperation::ByteSize() const {
     total_size += 1 * this->group_by_column_size() + data_size;
   }
   
-  // repeated .OperationTree.Aggregation aggregations = 4;
+  // repeated .Aggregation aggregations = 4;
   total_size += 1 * this->aggregations_size();
   for (int i = 0; i < this->aggregations_size(); i++) {
     total_size +=
@@ -2091,7 +2132,7 @@ void GroupByOperation::MergeFrom(const GroupByOperation& from) {
   aggregations_.MergeFrom(from.aggregations_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_source()) {
-      mutable_source()->::OperationTree::Operation::MergeFrom(from.source());
+      mutable_source()->::Operation::MergeFrom(from.source());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2156,10 +2197,10 @@ Operation::Operation()
 }
 
 void Operation::InitAsDefaultInstance() {
-  scan_ = const_cast< ::OperationTree::ScanOperation*>(&::OperationTree::ScanOperation::default_instance());
-  compute_ = const_cast< ::OperationTree::ComputeOperation*>(&::OperationTree::ComputeOperation::default_instance());
-  filter_ = const_cast< ::OperationTree::FilterOperation*>(&::OperationTree::FilterOperation::default_instance());
-  group_by_ = const_cast< ::OperationTree::GroupByOperation*>(&::OperationTree::GroupByOperation::default_instance());
+  scan_ = const_cast< ::ScanOperation*>(&::ScanOperation::default_instance());
+  compute_ = const_cast< ::ComputeOperation*>(&::ComputeOperation::default_instance());
+  filter_ = const_cast< ::FilterOperation*>(&::FilterOperation::default_instance());
+  group_by_ = const_cast< ::GroupByOperation*>(&::GroupByOperation::default_instance());
 }
 
 Operation::Operation(const Operation& from)
@@ -2213,16 +2254,16 @@ Operation* Operation::New() const {
 void Operation::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_scan()) {
-      if (scan_ != NULL) scan_->::OperationTree::ScanOperation::Clear();
+      if (scan_ != NULL) scan_->::ScanOperation::Clear();
     }
     if (has_compute()) {
-      if (compute_ != NULL) compute_->::OperationTree::ComputeOperation::Clear();
+      if (compute_ != NULL) compute_->::ComputeOperation::Clear();
     }
     if (has_filter()) {
-      if (filter_ != NULL) filter_->::OperationTree::FilterOperation::Clear();
+      if (filter_ != NULL) filter_->::FilterOperation::Clear();
     }
     if (has_group_by()) {
-      if (group_by_ != NULL) group_by_->::OperationTree::GroupByOperation::Clear();
+      if (group_by_ != NULL) group_by_->::GroupByOperation::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2235,7 +2276,7 @@ bool Operation::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .OperationTree.ScanOperation scan = 1;
+      // optional .ScanOperation scan = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2248,7 +2289,7 @@ bool Operation::MergePartialFromCodedStream(
         break;
       }
       
-      // optional .OperationTree.ComputeOperation compute = 2;
+      // optional .ComputeOperation compute = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2262,7 +2303,7 @@ bool Operation::MergePartialFromCodedStream(
         break;
       }
       
-      // optional .OperationTree.FilterOperation filter = 3;
+      // optional .FilterOperation filter = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2276,7 +2317,7 @@ bool Operation::MergePartialFromCodedStream(
         break;
       }
       
-      // optional .OperationTree.GroupByOperation group_by = 4;
+      // optional .GroupByOperation group_by = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2308,25 +2349,25 @@ bool Operation::MergePartialFromCodedStream(
 
 void Operation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .OperationTree.ScanOperation scan = 1;
+  // optional .ScanOperation scan = 1;
   if (has_scan()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->scan(), output);
   }
   
-  // optional .OperationTree.ComputeOperation compute = 2;
+  // optional .ComputeOperation compute = 2;
   if (has_compute()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->compute(), output);
   }
   
-  // optional .OperationTree.FilterOperation filter = 3;
+  // optional .FilterOperation filter = 3;
   if (has_filter()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->filter(), output);
   }
   
-  // optional .OperationTree.GroupByOperation group_by = 4;
+  // optional .GroupByOperation group_by = 4;
   if (has_group_by()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->group_by(), output);
@@ -2340,28 +2381,28 @@ void Operation::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Operation::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .OperationTree.ScanOperation scan = 1;
+  // optional .ScanOperation scan = 1;
   if (has_scan()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->scan(), target);
   }
   
-  // optional .OperationTree.ComputeOperation compute = 2;
+  // optional .ComputeOperation compute = 2;
   if (has_compute()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->compute(), target);
   }
   
-  // optional .OperationTree.FilterOperation filter = 3;
+  // optional .FilterOperation filter = 3;
   if (has_filter()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         3, this->filter(), target);
   }
   
-  // optional .OperationTree.GroupByOperation group_by = 4;
+  // optional .GroupByOperation group_by = 4;
   if (has_group_by()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -2379,28 +2420,28 @@ int Operation::ByteSize() const {
   int total_size = 0;
   
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .OperationTree.ScanOperation scan = 1;
+    // optional .ScanOperation scan = 1;
     if (has_scan()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->scan());
     }
     
-    // optional .OperationTree.ComputeOperation compute = 2;
+    // optional .ComputeOperation compute = 2;
     if (has_compute()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->compute());
     }
     
-    // optional .OperationTree.FilterOperation filter = 3;
+    // optional .FilterOperation filter = 3;
     if (has_filter()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->filter());
     }
     
-    // optional .OperationTree.GroupByOperation group_by = 4;
+    // optional .GroupByOperation group_by = 4;
     if (has_group_by()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -2435,16 +2476,16 @@ void Operation::MergeFrom(const Operation& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_scan()) {
-      mutable_scan()->::OperationTree::ScanOperation::MergeFrom(from.scan());
+      mutable_scan()->::ScanOperation::MergeFrom(from.scan());
     }
     if (from.has_compute()) {
-      mutable_compute()->::OperationTree::ComputeOperation::MergeFrom(from.compute());
+      mutable_compute()->::ComputeOperation::MergeFrom(from.compute());
     }
     if (from.has_filter()) {
-      mutable_filter()->::OperationTree::FilterOperation::MergeFrom(from.filter());
+      mutable_filter()->::FilterOperation::MergeFrom(from.filter());
     }
     if (from.has_group_by()) {
-      mutable_group_by()->::OperationTree::GroupByOperation::MergeFrom(from.group_by());
+      mutable_group_by()->::GroupByOperation::MergeFrom(from.group_by());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2464,6 +2505,9 @@ void Operation::CopyFrom(const Operation& from) {
 
 bool Operation::IsInitialized() const {
   
+  if (has_scan()) {
+    if (!this->scan().IsInitialized()) return false;
+  }
   if (has_compute()) {
     if (!this->compute().IsInitialized()) return false;
   }
@@ -2498,7 +2542,5 @@ void Operation::Swap(Operation* other) {
 
 
 // @@protoc_insertion_point(namespace_scope)
-
-}  // namespace OperationTree
 
 // @@protoc_insertion_point(global_scope)
