@@ -2,9 +2,9 @@
 #define GROUP_RECEIVER
 
 #include "node_environment.h"
-#include "Operation.h"
-#include "UniversalHashMap.h"
-#include "RealUniversalHashMap.h"
+#include "operations.pb.h"
+#include "UniversalHashmap.h"
+#include "RealUniversalHashmap.h"
 
 class GroupReceiver : public Operation {
 
@@ -17,7 +17,7 @@ class GroupReceiver : public Operation {
 	public:
 		std::vector<void*> pull(int &rows);
 
-		GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperation &node);
+		GroupReceiver(NodeEnvironmentInterface *node_env, GroupByOperation &node);
 };
 
 #endif // GROUP_RECEIVER

@@ -7,6 +7,9 @@
 #include <boost/scoped_array.hpp>
 #include <boost/thread.hpp>
 
+#include "GroupSender.h"
+#include "GroupReceiver.h"
+#include "operations.pb.h"
 #include "node_environment.h"
 #include "logger.h"
 
@@ -41,21 +44,14 @@ void Reader(NodeEnvironmentInterface* nei) {
 
 
 int main(int argc, char** argv) {
-  boost::scoped_ptr<NodeEnvironmentInterface> nei(
-      CreateNodeEnvironment(argc, argv));
+  NodeEnvironmentInterface * nei(CreateNodeEnvironment(argc, argv));
 
-  /*// Lets open data sources.
-  boost::scoped_ptr<DataSourceInterface> data_source_0(nei->OpenDataSourceFile(0));
-  boost::scoped_ptr<DataSourceInterface> data_source_1(nei->OpenDataSourceFile(1));
-  // Lets open sink on node 0.
-  if (nei->my_node_number() == 0) {
-    boost::scoped_ptr<DataSinkInterface> data_sink(nei->OpenDataSink());
-  }*/
-  
+  OperationTree::GroupByOperation op;
+    
   if (nei->my_node_number() % 2) {
-    Writer(nei.get());
+    GroupSender * sender = GroupSender(nei, NULL, op);
   } else {
-    Reader(nei.get());
+    GroupReceiver * receiver = GroupReceiver(nei, op);
   }
   return 0;
 }

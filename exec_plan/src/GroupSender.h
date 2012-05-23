@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "Operation.h"
+#include "operations.pb.h"
 #include "node_environment.h"
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
