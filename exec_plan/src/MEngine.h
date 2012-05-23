@@ -22,6 +22,7 @@ namespace Engine {
             Operation * root_operation_;
             Server * server_;
             int max_rows_;
+			bool consume;
     };
 
 }

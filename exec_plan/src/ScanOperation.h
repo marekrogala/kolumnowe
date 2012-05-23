@@ -8,12 +8,14 @@
 #include "MemoryManager.h"
 #include "debug.h"
 
+#include "node_environment.h"
+
 using namespace std;
 
 namespace Engine {
     class ScanOperation : public Operation {
         public:
-            ScanOperation(Server * server, const OperationTree::ScanOperation &node, MemoryManager * mem_manager_);
+            ScanOperation(NodeEnvironmentInterface* nei, int numberOfFiles, const OperationTree::ScanOperation &node, MemoryManager * mem_manager_);
             vector<void*> pull(int &rows);
             vector<OperationTree::ScanOperation_Type> init();
 
@@ -28,6 +30,10 @@ namespace Engine {
             vector<int> columns_;
             vector<OperationTree::ScanOperation_Type> types_;
             MemoryManager * mem_manager_;
+			NodeEnvironmentInterface* nei_;
+			int numberOfFiles_;
+			vector<DataSourceInterface*> dataSources_;
+			vector<DataSourceInterface*>::iterator currentFile_;
     };
 };
 
