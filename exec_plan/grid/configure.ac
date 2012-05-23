@@ -1,0 +1,26 @@
+AC_INIT([grid_framework], [0.2], [ptab@google.com])
+AC_CONFIG_MACRO_DIR([m4])
+AM_CONFIG_HEADER([src/header.h])
+AC_CONFIG_SRCDIR([src/Makefile.am])
+AM_INIT_AUTOMAKE
+AC_PROG_CXX
+AC_LANG([C++])
+AC_PROG_RANLIB
+AC_CONFIG_FILES([
+  Makefile
+  src/Makefile
+  src/utils/Makefile
+  src/netio/Makefile
+  src/node_environment/Makefile
+  src/node_environment_test_app/Makefile
+])
+ACX_PTHREAD
+LIBS="$PTHREAD_LIBS $LIBS"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS $BOOST_CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $PTHREAD_CFLAGS $BOOST_CPPFLAGS"
+CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS $BOOST_CPPFLAGS"
+CC="$PTHREAD_CC"
+AX_BOOST_BASE([1.40])
+AX_BOOST_THREAD
+AX_BOOST_SYSTEM
+AC_OUTPUT
