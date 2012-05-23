@@ -26,8 +26,7 @@ class GroupSender : public Operation {
 
 
 	public:
-		GroupSender(NodeEnvironmentInterface *node_env, Operation *source, const OperationTree::GroupByOperation &node) :
-			node_env_(node_env), source_(source), node_(node) {}
+		GroupSender(NodeEnvironmentInterface *node_env, Operation *source, const OperationTree::GroupByOperation &node);
 
 		std::vector<void*> pull(int &rows);
 };
