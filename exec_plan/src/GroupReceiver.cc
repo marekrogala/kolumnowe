@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 
 #include "GroupReceiver.h"
 
@@ -11,8 +12,14 @@ GroupReceiver::GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::
 
 std::vector<void*> GroupReceiver::pull(int &rows) {
 
+		char *data;
+		size_t data_len;
 
+		data = node_env_->ReadPacketBlocking(&data_len);
 
+		std::cerr << data << std::endl;
+
+		return std::vector<void*>();
 }
 
 std::vector<OperationTree::ScanOperation_Type> GroupReceiver::init() {
