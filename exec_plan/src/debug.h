@@ -9,7 +9,7 @@
 #define DEBUG_H_
 
 #ifdef DEBUG
-const bool debug = false;
+const bool debug = true;
 #else
 const bool debug = false;
 #endif

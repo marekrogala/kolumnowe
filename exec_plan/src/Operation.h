@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "operations.pb.h"
+#include "node_environment.h"
 
 using namespace std;
 
@@ -17,6 +18,11 @@ namespace Engine {
             virtual void* get_data(int idx) {
             	assert(false);
             }
+
+
+        protected:
+            Operation(NodeEnvironmentInterface * nei) : nei_(nei) {}
+            NodeEnvironmentInterface * nei_;
     };
 }
 

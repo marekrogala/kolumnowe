@@ -6,13 +6,17 @@
  */
 
 #include "BlockSerializer.h"
+#include "ScanOperation.h"
+#include <vector>
+
+using namespace std;
 
 namespace Engine {
 
 BlockSerializer::BlockSerializer() {}
+BlockSerializer::~BlockSerializer() {}
 
-virtual BlockSerializer::~BlockSerializer() {}
-char* BlockSerializer::serializeBlock(vector<OperationTree::ScanOperation_Type> types, vector<void*> data, int rows, char ** resBuffer) {
+int BlockSerializer::serializeBlock(vector<OperationTree::ScanOperation_Type> types, vector<void*> data, int rows, char ** resBuffer) {
 		int size = 0;
 		for(int i = 0; i < types.size(); i++) {
 			switch(types[i]) {

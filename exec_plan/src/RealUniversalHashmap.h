@@ -16,8 +16,6 @@
 #include <map>
 #include <cstdlib>
 #include "debug.h"
-#include "server.h"
-#include "server.h"
 #include "operations.pb.h"
 #include "Operation.h"
 #include "MemoryManager.h"

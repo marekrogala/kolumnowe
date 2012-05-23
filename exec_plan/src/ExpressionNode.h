@@ -7,7 +7,6 @@
 
 #ifndef EXPRESSIONNODE_H_
 #define EXPRESSIONNODE_H_
-#include "server.h"
 #include "operations.pb.h"
 #include "Operation.h"
 #include "ComputeOperation.h"

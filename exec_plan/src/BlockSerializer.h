@@ -9,6 +9,18 @@
 #define BLOCKSERIALIZER_H_
 
 #include "operations.pb.h"
+#include <vector>
+#include "ScanOperation.h"
+#include "Operation.h"
+#include "OperationBuilder.h"
+#include "operations.pb.h"
+#include "Operation.h"
+#include "ExpressionNode.h"
+#include "MemoryManager.h"
+#include "node_environment.h"
+#include "debug.h"
+
+using namespace std;
 
 namespace Engine {
 class BlockSerializer {

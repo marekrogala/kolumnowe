@@ -1,6 +1,6 @@
 #include "operations.pb.h"
 #include <google/protobuf/text_format.h>
-#include "server.h"
+//#include "server.h"
 #include <cstdio>
 #include <iostream>
 #include <fstream>
@@ -16,18 +16,14 @@ int main(int argc, char ** argv) {
       GOOGLE_PROTOBUF_VERIFY_VERSION; 
 
 
-      NodeEnvironmentInterface * node_interface = CreateNodeEnvironment(argc, argv);
-      cout << node_interface -> nodes_count() << " " << node_interface -> my_node_number() << endl;
 
-
-      int query_no = atoi(argv[1]);
+      int query_no = 1;
       //int max_rows = atoi(argv[3]); // TODO remove this shit before submitting
       int max_rows = 2000;
 
-      cerr << "Engine run with parameters query_no = " << query_no << " path_to_protobuff = " << argv[2] << endl;
-
-      OperationTree::Operation operation; 
-      std::fstream input(argv[2], ios::in);
+      OperationTree::Operation operation;
+      const char * query_file = "../tests/q1.ascii";
+      std::fstream input(query_file, ios::in);
       if (!input) {
           cerr << argv[2] << ": File not found." << endl;
           return -1;
@@ -40,11 +36,11 @@ int main(int argc, char ** argv) {
           }
       }
 
-      Server * server = CreateServer(query_no);
-      Engine::MEngine engine(operation, server, max_rows);
+      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
+      Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
       
-			delete server;
+		//	delete server;
       google::protobuf::ShutdownProtobufLibrary();
 
       return 0;

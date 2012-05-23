@@ -10,7 +10,7 @@
 
 #include "Operation.h"
 #include "OperationBuilder.h"
-#include "server.h"
+#include "node_environment.h"
 #include "operations.pb.h"
 #include "ExpressionNode.h"
 #include "MemoryManager.h"
@@ -23,12 +23,11 @@ namespace Engine {
 class GroupByOperation: public Engine::Operation {
 
 public:
-	GroupByOperation(Server * server, const OperationTree::GroupByOperation & node, MemoryManager * mem_manager);
+	GroupByOperation(NodeEnvironmentInterface * nei, const OperationTree::GroupByOperation & node, MemoryManager * mem_manager);
     vector<void*> pull(int &rows);
     vector<OperationTree::ScanOperation_Type> init();
 
 private:
-            Server * server_;
             Operation * source_;
             vector<OperationTree::ScanOperation_Type> source_types_;
             const OperationTree::GroupByOperation & node_;

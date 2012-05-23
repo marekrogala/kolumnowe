@@ -2,24 +2,23 @@
 #define ENGINE_COMPUTE_OPERATION_H
 
 #include "OperationBuilder.h"
-#include "server.h"
 #include "operations.pb.h"
 #include "Operation.h"
 #include "ExpressionNode.h"
 #include "MemoryManager.h"
+#include "node_environment.h"
 #include "debug.h"
 
 namespace Engine {
     class ComputeOperation : public Operation{
         public:
-            ComputeOperation(Server * server, const OperationTree::ComputeOperation & node, MemoryManager * mem_manager);
+            ComputeOperation(NodeEnvironmentInterface * nei, const OperationTree::ComputeOperation & node, MemoryManager * mem_manager);
             vector<void*> pull(int &rows);
             vector<OperationTree::ScanOperation_Type> init();
             OperationTree::ScanOperation_Type get_source_type(int idx);
             void* get_data(int idx);
         private:
             vector<void*> data_;
-            Server * server_;
             Operation * source_;
             vector<OperationTree::ScanOperation_Type> source_types_;
             vector<ExpressionNode *> expressions_;
