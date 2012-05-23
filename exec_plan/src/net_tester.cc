@@ -47,12 +47,12 @@ void Reader(NodeEnvironmentInterface* nei) {
 int main(int argc, char** argv) {
   NodeEnvironmentInterface * nei(CreateNodeEnvironment(argc, argv));
 
-  OperationTree::GroupByOperation op;
+  OperationTree::GroupByOperation *op = OperationTree::GroupByOperation::default_instance().New();
     
   if (nei->my_node_number() % 2) {
-    GroupSender sender(nei, NULL, op);
+    GroupSender sender(nei, NULL, *op);
   } else {
-    GroupReceiver receiver(nei, op);
+    GroupReceiver receiver(nei, *op);
   }
   return 0;
 }
