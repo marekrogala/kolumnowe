@@ -32,15 +32,21 @@ void Engine::MEngine::run() {
 		int ile = nei_ -> nodes_count() - 1;
 		size_t len;
 		while (ile) {
+
+			cerr << "Worker " << nei_ -> my_node_number() << " waiting for packet" << endl;
 			char * buffer = nei_ -> ReadPacketBlocking(&len);
 			if (len == 0) {
-				while (true);
-				assert(0);
+				cerr << "Somebody ended." << endl;
 				ile--;
+				continue;
 			}
+			cerr << "Worker " << nei_ -> my_node_number() << " got packet size = " << len << endl;
 			vector<void*> data;
+
 			int rows = blockSerializer.deserializeBlock(types, len, buffer,
 					data);
+			all_rows += rows;
+			cerr << "Worker " << nei_ -> my_node_number() << " rows " << rows << endl;
 			for (int i = 0; i < types.size(); ++i) {
 				switch (types[i]) {
 				case SINT:
@@ -57,6 +63,7 @@ void Engine::MEngine::run() {
 				}
 				delete data[i];
 			}
+
 		}
 	} else {
 		while (true) {
@@ -93,10 +100,11 @@ void Engine::MEngine::run() {
 			 }
 			 }*/
 		}
+	}
 
 		cerr << "=============================" << endl;
-		cerr << "Consumed " << all_rows << " rows " << endl;
+		cerr << "Worker " << nei_ -> my_node_number() << " Consumed " << all_rows << " rows " << endl;
 		cerr << "Completed query." << endl;
-	}
+
 }
 
