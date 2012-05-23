@@ -25,6 +25,8 @@
 #include <google/protobuf/generated_message_reflection.h>
 // @@protoc_insertion_point(includes)
 
+namespace OperationTree {
+
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_operations_2eproto();
 void protobuf_AssignDesc_operations_2eproto();
@@ -204,23 +206,23 @@ class Expression : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required .Expression.Operator operator = 1;
+  // required .OperationTree.Expression.Operator operator = 1;
   inline bool has_operator_() const;
   inline void clear_operator_();
   static const int kOperatorFieldNumber = 1;
-  inline ::Expression_Operator operator_() const;
-  inline void set_operator_(::Expression_Operator value);
+  inline ::OperationTree::Expression_Operator operator_() const;
+  inline void set_operator_(::OperationTree::Expression_Operator value);
   
-  // repeated .Expression children = 2;
+  // repeated .OperationTree.Expression children = 2;
   inline int children_size() const;
   inline void clear_children();
   static const int kChildrenFieldNumber = 2;
-  inline const ::Expression& children(int index) const;
-  inline ::Expression* mutable_children(int index);
-  inline ::Expression* add_children();
-  inline const ::google::protobuf::RepeatedPtrField< ::Expression >&
+  inline const ::OperationTree::Expression& children(int index) const;
+  inline ::OperationTree::Expression* mutable_children(int index);
+  inline ::OperationTree::Expression* add_children();
+  inline const ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >&
       children() const;
-  inline ::google::protobuf::RepeatedPtrField< ::Expression >*
+  inline ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >*
       mutable_children();
   
   // optional int32 constant_int32 = 10;
@@ -251,7 +253,7 @@ class Expression : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 column_id() const;
   inline void set_column_id(::google::protobuf::int32 value);
   
-  // @@protoc_insertion_point(class_scope:Expression)
+  // @@protoc_insertion_point(class_scope:OperationTree.Expression)
  private:
   inline void set_has_operator_();
   inline void clear_has_operator_();
@@ -266,7 +268,7 @@ class Expression : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::google::protobuf::RepeatedPtrField< ::Expression > children_;
+  ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression > children_;
   int operator__;
   ::google::protobuf::int32 constant_int32_;
   double constant_double_;
@@ -376,13 +378,13 @@ class ScanOperation : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_column();
   
-  // repeated .ScanOperation.Type type = 2;
+  // repeated .OperationTree.ScanOperation.Type type = 2;
   inline int type_size() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 2;
-  inline ::ScanOperation_Type type(int index) const;
-  inline void set_type(int index, ::ScanOperation_Type value);
-  inline void add_type(::ScanOperation_Type value);
+  inline ::OperationTree::ScanOperation_Type type(int index) const;
+  inline void set_type(int index, ::OperationTree::ScanOperation_Type value);
+  inline void add_type(::OperationTree::ScanOperation_Type value);
   inline const ::google::protobuf::RepeatedField<int>& type() const;
   inline ::google::protobuf::RepeatedField<int>* mutable_type();
   
@@ -393,7 +395,7 @@ class ScanOperation : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 number_of_files() const;
   inline void set_number_of_files(::google::protobuf::int32 value);
   
-  // @@protoc_insertion_point(class_scope:ScanOperation)
+  // @@protoc_insertion_point(class_scope:OperationTree.ScanOperation)
  private:
   inline void set_has_number_of_files();
   inline void clear_has_number_of_files();
@@ -470,35 +472,35 @@ class ComputeOperation : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required .Operation source = 1;
+  // required .OperationTree.Operation source = 1;
   inline bool has_source() const;
   inline void clear_source();
   static const int kSourceFieldNumber = 1;
-  inline const ::Operation& source() const;
-  inline ::Operation* mutable_source();
-  inline ::Operation* release_source();
+  inline const ::OperationTree::Operation& source() const;
+  inline ::OperationTree::Operation* mutable_source();
+  inline ::OperationTree::Operation* release_source();
   
-  // repeated .Expression expressions = 2;
+  // repeated .OperationTree.Expression expressions = 2;
   inline int expressions_size() const;
   inline void clear_expressions();
   static const int kExpressionsFieldNumber = 2;
-  inline const ::Expression& expressions(int index) const;
-  inline ::Expression* mutable_expressions(int index);
-  inline ::Expression* add_expressions();
-  inline const ::google::protobuf::RepeatedPtrField< ::Expression >&
+  inline const ::OperationTree::Expression& expressions(int index) const;
+  inline ::OperationTree::Expression* mutable_expressions(int index);
+  inline ::OperationTree::Expression* add_expressions();
+  inline const ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >&
       expressions() const;
-  inline ::google::protobuf::RepeatedPtrField< ::Expression >*
+  inline ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >*
       mutable_expressions();
   
-  // @@protoc_insertion_point(class_scope:ComputeOperation)
+  // @@protoc_insertion_point(class_scope:OperationTree.ComputeOperation)
  private:
   inline void set_has_source();
   inline void clear_has_source();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::Operation* source_;
-  ::google::protobuf::RepeatedPtrField< ::Expression > expressions_;
+  ::OperationTree::Operation* source_;
+  ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression > expressions_;
   
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -566,23 +568,23 @@ class FilterOperation : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required .Operation source = 1;
+  // required .OperationTree.Operation source = 1;
   inline bool has_source() const;
   inline void clear_source();
   static const int kSourceFieldNumber = 1;
-  inline const ::Operation& source() const;
-  inline ::Operation* mutable_source();
-  inline ::Operation* release_source();
+  inline const ::OperationTree::Operation& source() const;
+  inline ::OperationTree::Operation* mutable_source();
+  inline ::OperationTree::Operation* release_source();
   
-  // required .Expression expression = 2;
+  // required .OperationTree.Expression expression = 2;
   inline bool has_expression() const;
   inline void clear_expression();
   static const int kExpressionFieldNumber = 2;
-  inline const ::Expression& expression() const;
-  inline ::Expression* mutable_expression();
-  inline ::Expression* release_expression();
+  inline const ::OperationTree::Expression& expression() const;
+  inline ::OperationTree::Expression* mutable_expression();
+  inline ::OperationTree::Expression* release_expression();
   
-  // @@protoc_insertion_point(class_scope:FilterOperation)
+  // @@protoc_insertion_point(class_scope:OperationTree.FilterOperation)
  private:
   inline void set_has_source();
   inline void clear_has_source();
@@ -591,8 +593,8 @@ class FilterOperation : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::Operation* source_;
-  ::Expression* expression_;
+  ::OperationTree::Operation* source_;
+  ::OperationTree::Expression* expression_;
   
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -684,12 +686,12 @@ class Aggregation : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required .Aggregation.Type type = 1;
+  // required .OperationTree.Aggregation.Type type = 1;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
-  inline ::Aggregation_Type type() const;
-  inline void set_type(::Aggregation_Type value);
+  inline ::OperationTree::Aggregation_Type type() const;
+  inline void set_type(::OperationTree::Aggregation_Type value);
   
   // optional int32 aggregated_column = 2;
   inline bool has_aggregated_column() const;
@@ -698,7 +700,7 @@ class Aggregation : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 aggregated_column() const;
   inline void set_aggregated_column(::google::protobuf::int32 value);
   
-  // @@protoc_insertion_point(class_scope:Aggregation)
+  // @@protoc_insertion_point(class_scope:OperationTree.Aggregation)
  private:
   inline void set_has_type();
   inline void clear_has_type();
@@ -776,13 +778,13 @@ class GroupByOperation : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // required .Operation source = 1;
+  // required .OperationTree.Operation source = 1;
   inline bool has_source() const;
   inline void clear_source();
   static const int kSourceFieldNumber = 1;
-  inline const ::Operation& source() const;
-  inline ::Operation* mutable_source();
-  inline ::Operation* release_source();
+  inline const ::OperationTree::Operation& source() const;
+  inline ::OperationTree::Operation* mutable_source();
+  inline ::OperationTree::Operation* release_source();
   
   // repeated int32 group_by_column = 3;
   inline int group_by_column_size() const;
@@ -796,28 +798,28 @@ class GroupByOperation : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_group_by_column();
   
-  // repeated .Aggregation aggregations = 4;
+  // repeated .OperationTree.Aggregation aggregations = 4;
   inline int aggregations_size() const;
   inline void clear_aggregations();
   static const int kAggregationsFieldNumber = 4;
-  inline const ::Aggregation& aggregations(int index) const;
-  inline ::Aggregation* mutable_aggregations(int index);
-  inline ::Aggregation* add_aggregations();
-  inline const ::google::protobuf::RepeatedPtrField< ::Aggregation >&
+  inline const ::OperationTree::Aggregation& aggregations(int index) const;
+  inline ::OperationTree::Aggregation* mutable_aggregations(int index);
+  inline ::OperationTree::Aggregation* add_aggregations();
+  inline const ::google::protobuf::RepeatedPtrField< ::OperationTree::Aggregation >&
       aggregations() const;
-  inline ::google::protobuf::RepeatedPtrField< ::Aggregation >*
+  inline ::google::protobuf::RepeatedPtrField< ::OperationTree::Aggregation >*
       mutable_aggregations();
   
-  // @@protoc_insertion_point(class_scope:GroupByOperation)
+  // @@protoc_insertion_point(class_scope:OperationTree.GroupByOperation)
  private:
   inline void set_has_source();
   inline void clear_has_source();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::Operation* source_;
+  ::OperationTree::Operation* source_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > group_by_column_;
-  ::google::protobuf::RepeatedPtrField< ::Aggregation > aggregations_;
+  ::google::protobuf::RepeatedPtrField< ::OperationTree::Aggregation > aggregations_;
   
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -885,39 +887,39 @@ class Operation : public ::google::protobuf::Message {
   
   // accessors -------------------------------------------------------
   
-  // optional .ScanOperation scan = 1;
+  // optional .OperationTree.ScanOperation scan = 1;
   inline bool has_scan() const;
   inline void clear_scan();
   static const int kScanFieldNumber = 1;
-  inline const ::ScanOperation& scan() const;
-  inline ::ScanOperation* mutable_scan();
-  inline ::ScanOperation* release_scan();
+  inline const ::OperationTree::ScanOperation& scan() const;
+  inline ::OperationTree::ScanOperation* mutable_scan();
+  inline ::OperationTree::ScanOperation* release_scan();
   
-  // optional .ComputeOperation compute = 2;
+  // optional .OperationTree.ComputeOperation compute = 2;
   inline bool has_compute() const;
   inline void clear_compute();
   static const int kComputeFieldNumber = 2;
-  inline const ::ComputeOperation& compute() const;
-  inline ::ComputeOperation* mutable_compute();
-  inline ::ComputeOperation* release_compute();
+  inline const ::OperationTree::ComputeOperation& compute() const;
+  inline ::OperationTree::ComputeOperation* mutable_compute();
+  inline ::OperationTree::ComputeOperation* release_compute();
   
-  // optional .FilterOperation filter = 3;
+  // optional .OperationTree.FilterOperation filter = 3;
   inline bool has_filter() const;
   inline void clear_filter();
   static const int kFilterFieldNumber = 3;
-  inline const ::FilterOperation& filter() const;
-  inline ::FilterOperation* mutable_filter();
-  inline ::FilterOperation* release_filter();
+  inline const ::OperationTree::FilterOperation& filter() const;
+  inline ::OperationTree::FilterOperation* mutable_filter();
+  inline ::OperationTree::FilterOperation* release_filter();
   
-  // optional .GroupByOperation group_by = 4;
+  // optional .OperationTree.GroupByOperation group_by = 4;
   inline bool has_group_by() const;
   inline void clear_group_by();
   static const int kGroupByFieldNumber = 4;
-  inline const ::GroupByOperation& group_by() const;
-  inline ::GroupByOperation* mutable_group_by();
-  inline ::GroupByOperation* release_group_by();
+  inline const ::OperationTree::GroupByOperation& group_by() const;
+  inline ::OperationTree::GroupByOperation* mutable_group_by();
+  inline ::OperationTree::GroupByOperation* release_group_by();
   
-  // @@protoc_insertion_point(class_scope:Operation)
+  // @@protoc_insertion_point(class_scope:OperationTree.Operation)
  private:
   inline void set_has_scan();
   inline void clear_has_scan();
@@ -930,10 +932,10 @@ class Operation : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::ScanOperation* scan_;
-  ::ComputeOperation* compute_;
-  ::FilterOperation* filter_;
-  ::GroupByOperation* group_by_;
+  ::OperationTree::ScanOperation* scan_;
+  ::OperationTree::ComputeOperation* compute_;
+  ::OperationTree::FilterOperation* filter_;
+  ::OperationTree::GroupByOperation* group_by_;
   
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -952,7 +954,7 @@ class Operation : public ::google::protobuf::Message {
 
 // Expression
 
-// required .Expression.Operator operator = 1;
+// required .OperationTree.Expression.Operator operator = 1;
 inline bool Expression::has_operator_() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -966,36 +968,36 @@ inline void Expression::clear_operator_() {
   operator__ = 1;
   clear_has_operator_();
 }
-inline ::Expression_Operator Expression::operator_() const {
-  return static_cast< ::Expression_Operator >(operator__);
+inline ::OperationTree::Expression_Operator Expression::operator_() const {
+  return static_cast< ::OperationTree::Expression_Operator >(operator__);
 }
-inline void Expression::set_operator_(::Expression_Operator value) {
-  GOOGLE_DCHECK(::Expression_Operator_IsValid(value));
+inline void Expression::set_operator_(::OperationTree::Expression_Operator value) {
+  GOOGLE_DCHECK(::OperationTree::Expression_Operator_IsValid(value));
   set_has_operator_();
   operator__ = value;
 }
 
-// repeated .Expression children = 2;
+// repeated .OperationTree.Expression children = 2;
 inline int Expression::children_size() const {
   return children_.size();
 }
 inline void Expression::clear_children() {
   children_.Clear();
 }
-inline const ::Expression& Expression::children(int index) const {
+inline const ::OperationTree::Expression& Expression::children(int index) const {
   return children_.Get(index);
 }
-inline ::Expression* Expression::mutable_children(int index) {
+inline ::OperationTree::Expression* Expression::mutable_children(int index) {
   return children_.Mutable(index);
 }
-inline ::Expression* Expression::add_children() {
+inline ::OperationTree::Expression* Expression::add_children() {
   return children_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::Expression >&
+inline const ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >&
 Expression::children() const {
   return children_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::Expression >*
+inline ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >*
 Expression::mutable_children() {
   return &children_;
 }
@@ -1117,22 +1119,22 @@ ScanOperation::mutable_column() {
   return &column_;
 }
 
-// repeated .ScanOperation.Type type = 2;
+// repeated .OperationTree.ScanOperation.Type type = 2;
 inline int ScanOperation::type_size() const {
   return type_.size();
 }
 inline void ScanOperation::clear_type() {
   type_.Clear();
 }
-inline ::ScanOperation_Type ScanOperation::type(int index) const {
-  return static_cast< ::ScanOperation_Type >(type_.Get(index));
+inline ::OperationTree::ScanOperation_Type ScanOperation::type(int index) const {
+  return static_cast< ::OperationTree::ScanOperation_Type >(type_.Get(index));
 }
-inline void ScanOperation::set_type(int index, ::ScanOperation_Type value) {
-  GOOGLE_DCHECK(::ScanOperation_Type_IsValid(value));
+inline void ScanOperation::set_type(int index, ::OperationTree::ScanOperation_Type value) {
+  GOOGLE_DCHECK(::OperationTree::ScanOperation_Type_IsValid(value));
   type_.Set(index, value);
 }
-inline void ScanOperation::add_type(::ScanOperation_Type value) {
-  GOOGLE_DCHECK(::ScanOperation_Type_IsValid(value));
+inline void ScanOperation::add_type(::OperationTree::ScanOperation_Type value) {
+  GOOGLE_DCHECK(::OperationTree::ScanOperation_Type_IsValid(value));
   type_.Add(value);
 }
 inline const ::google::protobuf::RepeatedField<int>&
@@ -1170,7 +1172,7 @@ inline void ScanOperation::set_number_of_files(::google::protobuf::int32 value) 
 
 // ComputeOperation
 
-// required .Operation source = 1;
+// required .OperationTree.Operation source = 1;
 inline bool ComputeOperation::has_source() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1181,45 +1183,45 @@ inline void ComputeOperation::clear_has_source() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void ComputeOperation::clear_source() {
-  if (source_ != NULL) source_->::Operation::Clear();
+  if (source_ != NULL) source_->::OperationTree::Operation::Clear();
   clear_has_source();
 }
-inline const ::Operation& ComputeOperation::source() const {
+inline const ::OperationTree::Operation& ComputeOperation::source() const {
   return source_ != NULL ? *source_ : *default_instance_->source_;
 }
-inline ::Operation* ComputeOperation::mutable_source() {
+inline ::OperationTree::Operation* ComputeOperation::mutable_source() {
   set_has_source();
-  if (source_ == NULL) source_ = new ::Operation;
+  if (source_ == NULL) source_ = new ::OperationTree::Operation;
   return source_;
 }
-inline ::Operation* ComputeOperation::release_source() {
+inline ::OperationTree::Operation* ComputeOperation::release_source() {
   clear_has_source();
-  ::Operation* temp = source_;
+  ::OperationTree::Operation* temp = source_;
   source_ = NULL;
   return temp;
 }
 
-// repeated .Expression expressions = 2;
+// repeated .OperationTree.Expression expressions = 2;
 inline int ComputeOperation::expressions_size() const {
   return expressions_.size();
 }
 inline void ComputeOperation::clear_expressions() {
   expressions_.Clear();
 }
-inline const ::Expression& ComputeOperation::expressions(int index) const {
+inline const ::OperationTree::Expression& ComputeOperation::expressions(int index) const {
   return expressions_.Get(index);
 }
-inline ::Expression* ComputeOperation::mutable_expressions(int index) {
+inline ::OperationTree::Expression* ComputeOperation::mutable_expressions(int index) {
   return expressions_.Mutable(index);
 }
-inline ::Expression* ComputeOperation::add_expressions() {
+inline ::OperationTree::Expression* ComputeOperation::add_expressions() {
   return expressions_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::Expression >&
+inline const ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >&
 ComputeOperation::expressions() const {
   return expressions_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::Expression >*
+inline ::google::protobuf::RepeatedPtrField< ::OperationTree::Expression >*
 ComputeOperation::mutable_expressions() {
   return &expressions_;
 }
@@ -1228,7 +1230,7 @@ ComputeOperation::mutable_expressions() {
 
 // FilterOperation
 
-// required .Operation source = 1;
+// required .OperationTree.Operation source = 1;
 inline bool FilterOperation::has_source() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1239,25 +1241,25 @@ inline void FilterOperation::clear_has_source() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void FilterOperation::clear_source() {
-  if (source_ != NULL) source_->::Operation::Clear();
+  if (source_ != NULL) source_->::OperationTree::Operation::Clear();
   clear_has_source();
 }
-inline const ::Operation& FilterOperation::source() const {
+inline const ::OperationTree::Operation& FilterOperation::source() const {
   return source_ != NULL ? *source_ : *default_instance_->source_;
 }
-inline ::Operation* FilterOperation::mutable_source() {
+inline ::OperationTree::Operation* FilterOperation::mutable_source() {
   set_has_source();
-  if (source_ == NULL) source_ = new ::Operation;
+  if (source_ == NULL) source_ = new ::OperationTree::Operation;
   return source_;
 }
-inline ::Operation* FilterOperation::release_source() {
+inline ::OperationTree::Operation* FilterOperation::release_source() {
   clear_has_source();
-  ::Operation* temp = source_;
+  ::OperationTree::Operation* temp = source_;
   source_ = NULL;
   return temp;
 }
 
-// required .Expression expression = 2;
+// required .OperationTree.Expression expression = 2;
 inline bool FilterOperation::has_expression() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1268,20 +1270,20 @@ inline void FilterOperation::clear_has_expression() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void FilterOperation::clear_expression() {
-  if (expression_ != NULL) expression_->::Expression::Clear();
+  if (expression_ != NULL) expression_->::OperationTree::Expression::Clear();
   clear_has_expression();
 }
-inline const ::Expression& FilterOperation::expression() const {
+inline const ::OperationTree::Expression& FilterOperation::expression() const {
   return expression_ != NULL ? *expression_ : *default_instance_->expression_;
 }
-inline ::Expression* FilterOperation::mutable_expression() {
+inline ::OperationTree::Expression* FilterOperation::mutable_expression() {
   set_has_expression();
-  if (expression_ == NULL) expression_ = new ::Expression;
+  if (expression_ == NULL) expression_ = new ::OperationTree::Expression;
   return expression_;
 }
-inline ::Expression* FilterOperation::release_expression() {
+inline ::OperationTree::Expression* FilterOperation::release_expression() {
   clear_has_expression();
-  ::Expression* temp = expression_;
+  ::OperationTree::Expression* temp = expression_;
   expression_ = NULL;
   return temp;
 }
@@ -1290,7 +1292,7 @@ inline ::Expression* FilterOperation::release_expression() {
 
 // Aggregation
 
-// required .Aggregation.Type type = 1;
+// required .OperationTree.Aggregation.Type type = 1;
 inline bool Aggregation::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1304,11 +1306,11 @@ inline void Aggregation::clear_type() {
   type_ = 1;
   clear_has_type();
 }
-inline ::Aggregation_Type Aggregation::type() const {
-  return static_cast< ::Aggregation_Type >(type_);
+inline ::OperationTree::Aggregation_Type Aggregation::type() const {
+  return static_cast< ::OperationTree::Aggregation_Type >(type_);
 }
-inline void Aggregation::set_type(::Aggregation_Type value) {
-  GOOGLE_DCHECK(::Aggregation_Type_IsValid(value));
+inline void Aggregation::set_type(::OperationTree::Aggregation_Type value) {
+  GOOGLE_DCHECK(::OperationTree::Aggregation_Type_IsValid(value));
   set_has_type();
   type_ = value;
 }
@@ -1339,7 +1341,7 @@ inline void Aggregation::set_aggregated_column(::google::protobuf::int32 value) 
 
 // GroupByOperation
 
-// required .Operation source = 1;
+// required .OperationTree.Operation source = 1;
 inline bool GroupByOperation::has_source() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1350,20 +1352,20 @@ inline void GroupByOperation::clear_has_source() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void GroupByOperation::clear_source() {
-  if (source_ != NULL) source_->::Operation::Clear();
+  if (source_ != NULL) source_->::OperationTree::Operation::Clear();
   clear_has_source();
 }
-inline const ::Operation& GroupByOperation::source() const {
+inline const ::OperationTree::Operation& GroupByOperation::source() const {
   return source_ != NULL ? *source_ : *default_instance_->source_;
 }
-inline ::Operation* GroupByOperation::mutable_source() {
+inline ::OperationTree::Operation* GroupByOperation::mutable_source() {
   set_has_source();
-  if (source_ == NULL) source_ = new ::Operation;
+  if (source_ == NULL) source_ = new ::OperationTree::Operation;
   return source_;
 }
-inline ::Operation* GroupByOperation::release_source() {
+inline ::OperationTree::Operation* GroupByOperation::release_source() {
   clear_has_source();
-  ::Operation* temp = source_;
+  ::OperationTree::Operation* temp = source_;
   source_ = NULL;
   return temp;
 }
@@ -1393,27 +1395,27 @@ GroupByOperation::mutable_group_by_column() {
   return &group_by_column_;
 }
 
-// repeated .Aggregation aggregations = 4;
+// repeated .OperationTree.Aggregation aggregations = 4;
 inline int GroupByOperation::aggregations_size() const {
   return aggregations_.size();
 }
 inline void GroupByOperation::clear_aggregations() {
   aggregations_.Clear();
 }
-inline const ::Aggregation& GroupByOperation::aggregations(int index) const {
+inline const ::OperationTree::Aggregation& GroupByOperation::aggregations(int index) const {
   return aggregations_.Get(index);
 }
-inline ::Aggregation* GroupByOperation::mutable_aggregations(int index) {
+inline ::OperationTree::Aggregation* GroupByOperation::mutable_aggregations(int index) {
   return aggregations_.Mutable(index);
 }
-inline ::Aggregation* GroupByOperation::add_aggregations() {
+inline ::OperationTree::Aggregation* GroupByOperation::add_aggregations() {
   return aggregations_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::Aggregation >&
+inline const ::google::protobuf::RepeatedPtrField< ::OperationTree::Aggregation >&
 GroupByOperation::aggregations() const {
   return aggregations_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::Aggregation >*
+inline ::google::protobuf::RepeatedPtrField< ::OperationTree::Aggregation >*
 GroupByOperation::mutable_aggregations() {
   return &aggregations_;
 }
@@ -1422,7 +1424,7 @@ GroupByOperation::mutable_aggregations() {
 
 // Operation
 
-// optional .ScanOperation scan = 1;
+// optional .OperationTree.ScanOperation scan = 1;
 inline bool Operation::has_scan() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1433,25 +1435,25 @@ inline void Operation::clear_has_scan() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Operation::clear_scan() {
-  if (scan_ != NULL) scan_->::ScanOperation::Clear();
+  if (scan_ != NULL) scan_->::OperationTree::ScanOperation::Clear();
   clear_has_scan();
 }
-inline const ::ScanOperation& Operation::scan() const {
+inline const ::OperationTree::ScanOperation& Operation::scan() const {
   return scan_ != NULL ? *scan_ : *default_instance_->scan_;
 }
-inline ::ScanOperation* Operation::mutable_scan() {
+inline ::OperationTree::ScanOperation* Operation::mutable_scan() {
   set_has_scan();
-  if (scan_ == NULL) scan_ = new ::ScanOperation;
+  if (scan_ == NULL) scan_ = new ::OperationTree::ScanOperation;
   return scan_;
 }
-inline ::ScanOperation* Operation::release_scan() {
+inline ::OperationTree::ScanOperation* Operation::release_scan() {
   clear_has_scan();
-  ::ScanOperation* temp = scan_;
+  ::OperationTree::ScanOperation* temp = scan_;
   scan_ = NULL;
   return temp;
 }
 
-// optional .ComputeOperation compute = 2;
+// optional .OperationTree.ComputeOperation compute = 2;
 inline bool Operation::has_compute() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1462,25 +1464,25 @@ inline void Operation::clear_has_compute() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Operation::clear_compute() {
-  if (compute_ != NULL) compute_->::ComputeOperation::Clear();
+  if (compute_ != NULL) compute_->::OperationTree::ComputeOperation::Clear();
   clear_has_compute();
 }
-inline const ::ComputeOperation& Operation::compute() const {
+inline const ::OperationTree::ComputeOperation& Operation::compute() const {
   return compute_ != NULL ? *compute_ : *default_instance_->compute_;
 }
-inline ::ComputeOperation* Operation::mutable_compute() {
+inline ::OperationTree::ComputeOperation* Operation::mutable_compute() {
   set_has_compute();
-  if (compute_ == NULL) compute_ = new ::ComputeOperation;
+  if (compute_ == NULL) compute_ = new ::OperationTree::ComputeOperation;
   return compute_;
 }
-inline ::ComputeOperation* Operation::release_compute() {
+inline ::OperationTree::ComputeOperation* Operation::release_compute() {
   clear_has_compute();
-  ::ComputeOperation* temp = compute_;
+  ::OperationTree::ComputeOperation* temp = compute_;
   compute_ = NULL;
   return temp;
 }
 
-// optional .FilterOperation filter = 3;
+// optional .OperationTree.FilterOperation filter = 3;
 inline bool Operation::has_filter() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1491,25 +1493,25 @@ inline void Operation::clear_has_filter() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Operation::clear_filter() {
-  if (filter_ != NULL) filter_->::FilterOperation::Clear();
+  if (filter_ != NULL) filter_->::OperationTree::FilterOperation::Clear();
   clear_has_filter();
 }
-inline const ::FilterOperation& Operation::filter() const {
+inline const ::OperationTree::FilterOperation& Operation::filter() const {
   return filter_ != NULL ? *filter_ : *default_instance_->filter_;
 }
-inline ::FilterOperation* Operation::mutable_filter() {
+inline ::OperationTree::FilterOperation* Operation::mutable_filter() {
   set_has_filter();
-  if (filter_ == NULL) filter_ = new ::FilterOperation;
+  if (filter_ == NULL) filter_ = new ::OperationTree::FilterOperation;
   return filter_;
 }
-inline ::FilterOperation* Operation::release_filter() {
+inline ::OperationTree::FilterOperation* Operation::release_filter() {
   clear_has_filter();
-  ::FilterOperation* temp = filter_;
+  ::OperationTree::FilterOperation* temp = filter_;
   filter_ = NULL;
   return temp;
 }
 
-// optional .GroupByOperation group_by = 4;
+// optional .OperationTree.GroupByOperation group_by = 4;
 inline bool Operation::has_group_by() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1520,20 +1522,20 @@ inline void Operation::clear_has_group_by() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void Operation::clear_group_by() {
-  if (group_by_ != NULL) group_by_->::GroupByOperation::Clear();
+  if (group_by_ != NULL) group_by_->::OperationTree::GroupByOperation::Clear();
   clear_has_group_by();
 }
-inline const ::GroupByOperation& Operation::group_by() const {
+inline const ::OperationTree::GroupByOperation& Operation::group_by() const {
   return group_by_ != NULL ? *group_by_ : *default_instance_->group_by_;
 }
-inline ::GroupByOperation* Operation::mutable_group_by() {
+inline ::OperationTree::GroupByOperation* Operation::mutable_group_by() {
   set_has_group_by();
-  if (group_by_ == NULL) group_by_ = new ::GroupByOperation;
+  if (group_by_ == NULL) group_by_ = new ::OperationTree::GroupByOperation;
   return group_by_;
 }
-inline ::GroupByOperation* Operation::release_group_by() {
+inline ::OperationTree::GroupByOperation* Operation::release_group_by() {
   clear_has_group_by();
-  ::GroupByOperation* temp = group_by_;
+  ::OperationTree::GroupByOperation* temp = group_by_;
   group_by_ = NULL;
   return temp;
 }
@@ -1541,21 +1543,23 @@ inline ::GroupByOperation* Operation::release_group_by() {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace OperationTree
+
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::Expression_Operator>() {
-  return ::Expression_Operator_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::OperationTree::Expression_Operator>() {
+  return ::OperationTree::Expression_Operator_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::ScanOperation_Type>() {
-  return ::ScanOperation_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::OperationTree::ScanOperation_Type>() {
+  return ::OperationTree::ScanOperation_Type_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::Aggregation_Type>() {
-  return ::Aggregation_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::OperationTree::Aggregation_Type>() {
+  return ::OperationTree::Aggregation_Type_descriptor();
 }
 
 }  // namespace google

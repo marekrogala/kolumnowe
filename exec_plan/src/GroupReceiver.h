@@ -6,6 +6,8 @@
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
 
+namespace Engine {
+
 class GroupReceiver : public Operation {
 
 	private:
@@ -19,5 +21,7 @@ class GroupReceiver : public Operation {
 
 		GroupReceiver(NodeEnvironmentInterface *node_env, GroupByOperation &node);
 };
+
+}
 
 #endif // GROUP_RECEIVER
