@@ -20,8 +20,8 @@ PIDS=""
 for i in `seq 0 $MAX_NUMBER`; do
    PORT=`expr $START_PORT + $i`
   if [ "$i" == "$MAX_NUMBER" ]; then sleep 3; fi;
-  echo "RUNNING:./exec_plan $i $PORT $HOSTS &"
-  ./exec_plan $i $PORT $HOSTS  & 
+  echo "RUNNING:./net_tester $i $PORT $HOSTS &"
+  ./net_tester $i $PORT $HOSTS  & 
   PIDS="$PIDS $!"
 done
 
