@@ -3,10 +3,11 @@
 
 #include <vector>
 
-#include "Operation.h"
+#include "operations.pb.h"
 #include "node_environment.h"
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
+#include "layers.h"
 
 namespace Engine {
 
@@ -31,6 +32,8 @@ class GroupSender : public Operation {
 		GroupSender(NodeEnvironmentInterface *node_env, Operation *source, const OperationTree::GroupByOperation &node);
 
 		std::vector<void*> pull(int &rows);
+
+		std::vector<OperationTree::ScanOperation_Type> init();
 };
 
 }

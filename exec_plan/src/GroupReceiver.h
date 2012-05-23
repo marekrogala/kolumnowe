@@ -2,9 +2,10 @@
 #define GROUP_RECEIVER
 
 #include "node_environment.h"
-#include "Operation.h"
-#include "UniversalHashMap.h"
-#include "RealUniversalHashMap.h"
+#include "operations.pb.h"
+#include "UniversalHashmap.h"
+#include "RealUniversalHashmap.h"
+#include "layers.h"
 
 namespace Engine {
 
@@ -20,6 +21,8 @@ class GroupReceiver : public Operation {
 		std::vector<void*> pull(int &rows);
 
 		GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperation &node);
+
+		std::vector<OperationTree::ScanOperation_Type> init();
 };
 
 }

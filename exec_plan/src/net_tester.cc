@@ -7,19 +7,17 @@
 #include <boost/scoped_array.hpp>
 #include <boost/thread.hpp>
 
+#include "GroupSender.h"
+#include "GroupReceiver.h"
+#include "operations.pb.h"
 #include "node_environment.h"
 #include "logger.h"
 
 using namespace std;
+using namespace Engine;
 
 void Writer(NodeEnvironmentInterface* nei) {
-  char buff[20];
-  sprintf(buff, "HEY from %d", nei->my_node_number());
-  for (int i = 0 ; i < nei->nodes_count(); ++i) {
-    if(i%2==0){
-      nei->SendPacket(i, buff, strlen(buff));
-    }
-  }
+
 }
 
 void Reader(NodeEnvironmentInterface* nei) {
@@ -30,32 +28,36 @@ void Reader(NodeEnvironmentInterface* nei) {
         cout << nei->my_node_number() << " received " << packet.get() << endl;
       }
     }
-//    if (packet != NULL) {
-//      LOG3("worker %d/%d: GOT: %s", nei->my_node_number(), nei->nodes_count(), packet.get());
-//    }
-//  }
-//  std::size_t data_len;
-//  boost::scoped_array<char> packet(nei->ReadPacketNotBlocking(&data_len));
-//  CHECK(packet == NULL, "");
+
 }
 
 
-int main(int argc, char** argv) {
-  boost::scoped_ptr<NodeEnvironmentInterface> nei(
-      CreateNodeEnvironment(argc, argv));
+void print_rows(vector<void*> r){
+  for(int i=0;i<r.size();i++){
+    cout << (char*)r[i]<< endl;
+  }
+}
 
-  /*// Lets open data sources.
-  boost::scoped_ptr<DataSourceInterface> data_source_0(nei->OpenDataSourceFile(0));
-  boost::scoped_ptr<DataSourceInterface> data_source_1(nei->OpenDataSourceFile(1));
-  // Lets open sink on node 0.
-  if (nei->my_node_number() == 0) {
-    boost::scoped_ptr<DataSinkInterface> data_sink(nei->OpenDataSink());
-  }*/
-  
+int main(int argc, char** argv) {
+  NodeEnvironmentInterface * nei(CreateNodeEnvironment(argc, argv));
+
+  OperationTree::GroupByOperation *op = OperationTree::GroupByOperation::default_instance().New();
+    
   if (nei->my_node_number() % 2) {
-    Writer(nei.get());
+    cout<<"sender"<<nei->my_node_number()<<endl;
+    GroupSender sender(nei, NULL, *op);
+    int nrows;
+    sender.pull(nrows);
   } else {
-    Reader(nei.get());
+    cout<<"receiver"<<nei->my_node_number()<<endl;
+    GroupReceiver receiver(nei, *op);
+    
+    int nrows = 0;
+    vector<void*> received = receiver.pull(nrows);
+    while(nrows){
+      print_rows(received);
+      received = receiver.pull(nrows);
+    }
   }
   return 0;
 }
