@@ -1,5 +1,5 @@
 #include <cassert>
-
+#include <stdlib.h>
 #include "GroupSender.h"
 
 namespace Engine {
@@ -14,14 +14,25 @@ int32* countHashes(vector<void*> &data, int rows) {
 }
 
 std::vector<void*> GroupSender::pull(int &rows) {
-
-	int rows = 0;
+  sleep(4);
+	int nrows = 0;
 	vector<void*> data;
-
+	
 	//data = source_->pull(rows);
-	while (rows > 0) {
+	while (nrows > 0) {
 		
 	}
+	
+	char buff[20];
+  sprintf(buff, "HEY from %d", node_env_->my_node_number());
+  data.push_back((void*) buff);
+  
+  //serializacja
+  std::cout << "Other layer " << CountNodesInOtherLayer(node_env_)<<std::endl;
+  for (int i = 0 ; i < CountNodesInOtherLayer(node_env_); ++i) {
+    std::cout<<"Sending..."<<std::endl;
+      SendPacket(node_env_, i, buff, strlen(buff)+1);
+  }
 
 	// this is dummy return value
 	return std::vector<void*>();

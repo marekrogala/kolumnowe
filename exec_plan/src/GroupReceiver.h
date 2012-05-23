@@ -5,6 +5,7 @@
 #include "operations.pb.h"
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
+#include "layers.h"
 
 namespace Engine {
 

@@ -7,6 +7,7 @@
 #include "node_environment.h"
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
+#include "layers.h"
 
 namespace Engine {
 

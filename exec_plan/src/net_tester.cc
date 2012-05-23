@@ -17,13 +17,7 @@ using namespace std;
 using namespace Engine;
 
 void Writer(NodeEnvironmentInterface* nei) {
-  char buff[20];
-  sprintf(buff, "HEY from %d", nei->my_node_number());
-  for (int i = 0 ; i < nei->nodes_count(); ++i) {
-    if(i%2==0){
-      nei->SendPacket(i, buff, strlen(buff));
-    }
-  }
+
 }
 
 void Reader(NodeEnvironmentInterface* nei) {
@@ -34,15 +28,15 @@ void Reader(NodeEnvironmentInterface* nei) {
         cout << nei->my_node_number() << " received " << packet.get() << endl;
       }
     }
-//    if (packet != NULL) {
-//      LOG3("worker %d/%d: GOT: %s", nei->my_node_number(), nei->nodes_count(), packet.get());
-//    }
-//  }
-//  std::size_t data_len;
-//  boost::scoped_array<char> packet(nei->ReadPacketNotBlocking(&data_len));
-//  CHECK(packet == NULL, "");
+
 }
 
+
+void print_rows(vector<void*> r){
+  for(int i=0;i<r.size();i++){
+    cout << (char*)r[i]<< endl;
+  }
+}
 
 int main(int argc, char** argv) {
   NodeEnvironmentInterface * nei(CreateNodeEnvironment(argc, argv));
@@ -50,9 +44,20 @@ int main(int argc, char** argv) {
   OperationTree::GroupByOperation *op = OperationTree::GroupByOperation::default_instance().New();
     
   if (nei->my_node_number() % 2) {
+    cout<<"sender"<<nei->my_node_number()<<endl;
     GroupSender sender(nei, NULL, *op);
+    int nrows;
+    sender.pull(nrows);
   } else {
+    cout<<"receiver"<<nei->my_node_number()<<endl;
     GroupReceiver receiver(nei, *op);
+    
+    int nrows = 0;
+    vector<void*> received = receiver.pull(nrows);
+    while(nrows){
+      print_rows(received);
+      received = receiver.pull(nrows);
+    }
   }
   return 0;
 }
