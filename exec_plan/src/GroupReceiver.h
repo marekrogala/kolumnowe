@@ -6,15 +6,18 @@
 #include "UniversalHashMap.h"
 #include "RealUniversalHashMap.h"
 
-class GroupReceiver {
+class GroupReceiver : public Operation {
 
 	private:
 		NodeEnvironmentInterface* node_env_;
 		std::vector<OperationTree::ScanOperation_Type> source_types_;
 		int worker_id;
+		const OperationTree::GroupByOperation &node_;
 
 	public:
 		std::vector<void*> pull(int &rows);
+
+		GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperation &node);
 };
 
 #endif // GROUP_RECEIVER
