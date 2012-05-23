@@ -1,0 +1,108 @@
+Engine run with parameters query_no = 1 path_to_protobuff = ../tests2/q1.ascii
+Started running query.
+Result type
+3 3 2 2 1 
+=============================
+Consumed 5289383 rows 
+Completed query.
+Column 0: ate 5289383 rows, hash 13292.
+Column 1: ate 5289383 rows, hash 1072248.
+Column 2: ate 5289383 rows, hash -2147483648.
+Column 3: ate 5289383 rows, hash -2147483648.
+Column 4: ate 5289383 rows, hash 629.
+Engine run with parameters query_no = 2 path_to_protobuff = ../tests2/q2.ascii
+Started running query.
+Result type
+1 
+=============================
+Consumed 6335290 rows 
+Completed query.
+Column 0: ate 6335290 rows, hash 502122013.
+Engine run with parameters query_no = 3 path_to_protobuff = ../tests2/q3.ascii
+Started running query.
+Result type
+2 
+=============================
+Consumed 6554746 rows 
+Completed query.
+Column 0: ate 6554746 rows, hash 143949793.
+Engine run with parameters query_no = 4 path_to_protobuff = ../tests2/q4.ascii
+Started running query.
+Result type
+2 
+=============================
+Consumed 9078301 rows 
+Completed query.
+Column 0: ate 9078301 rows, hash 0.
+Engine run with parameters query_no = 5 path_to_protobuff = ../tests2/q5.ascii
+Started running query.
+Result type
+2 
+=============================
+Consumed 1011675 rows 
+Completed query.
+Column 0: ate 1011675 rows, hash -2147483648.
+Engine run with parameters query_no = 6 path_to_protobuff = ../tests2/q6.ascii
+Started running query.
+Result type
+2 3 1 
+=============================
+Consumed 911436 rows 
+Completed query.
+Column 0: ate 911436 rows, hash 0.
+Column 1: ate 911436 rows, hash 911435.
+Column 2: ate 911436 rows, hash 0.
+Engine run with parameters query_no = 7 path_to_protobuff = ../tests2/q7.ascii
+Started running query.
+Result type
+1 1 
+=============================
+Consumed 36767 rows 
+Completed query.
+Column 0: ate 36767 rows, hash -6456.
+Column 1: ate 36767 rows, hash 1723.
+Engine run with parameters query_no = 8 path_to_protobuff = ../tests2/q8.ascii
+Started running query.
+Result type
+2 
+=============================
+Consumed 1 rows 
+Completed query.
+Column 0: ate 1 rows, hash -2147483648.
+Engine run with parameters query_no = 9 path_to_protobuff = ../tests2/q9.ascii
+Started running query.
+YEEEEEEEEEEEEEEEEEEEEES !!!1 3
+1 32743 38595680 
+Creating RealUniversal!!!!!!!!!!
+Result type
+2 
+=============================
+Consumed 41446 rows 
+Completed query.
+Column 0: ate 41446 rows, hash -1202201930.
+Engine run with parameters query_no = 10 path_to_protobuff = ../tests2/q10.ascii
+Started running query.
+Result type
+1 1 
+=============================
+Consumed 1 rows 
+Completed query.
+Column 0: ate 1 rows, hash 0.
+Column 1: ate 1 rows, hash 3216197.
+Engine run with parameters query_no = 11 path_to_protobuff = ../tests2/q11.ascii
+Started running query.
+Result type
+1 
+=============================
+Consumed 167 rows 
+Completed query.
+Column 0: ate 167 rows, hash 3106.
+Engine run with parameters query_no = 12 path_to_protobuff = ../tests2/q12.ascii
+Started running query.
+Result type
+1 1 
+=============================
+Consumed 612 rows 
+Completed query.
+Column 0: ate 612 rows, hash 780307614.
+Column 1: ate 612 rows, hash 130990.
