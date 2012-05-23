@@ -1,3 +1,5 @@
+#include <cassert.h>
+
 #include "GroupSender.h"
 
 namespace Engine {
@@ -13,6 +15,10 @@ std::vector<void*> GroupSender::pull(int &rows) {
 
 	// this is dummy return value
 	return std::vector<void*>();
+}
+
+std::vector<OperationTree::ScanOperation_Type> GroupSender::init() {
+	assert(false);
 }
 
 }
