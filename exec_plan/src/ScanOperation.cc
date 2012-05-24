@@ -1,5 +1,6 @@
 #include "ScanOperation.h"
 #include <iostream>
+#include "ExpressionNode.h"
 
 using namespace std;
 
@@ -8,17 +9,12 @@ namespace Engine {
 vector<OperationTree::ScanOperation_Type> ScanOperation::init() {
     if (debug) cerr << "ScanOperation::init()" << endl;
 
-	cerr << "DDDDDDDDDDDDDDDDD " << nei_ << endl;
 	int numberOfNodes = nei_ -> nodes_count();
-	cerr << "DDDDDDDDDDDDDDDDD " << nei_ << endl;
 	for(int i = nei_ -> my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
-		cerr << "OPENED " << endl;
 		dataSources_.push_back(nei_->OpenDataSourceFile(i));
-		cerr << "OPENED " << endl;
 	}
 	currentFile_ = dataSources_.begin();
 
-	cerr << "fsdfsdffsd\n";
     int n = node_.column_size();
     for(int i = 0; i < n; ++i) {
         columns_.push_back(node_.column(i));
@@ -28,75 +24,76 @@ vector<OperationTree::ScanOperation_Type> ScanOperation::init() {
 }
 
 vector<void*> ScanOperation::pull(int &rows) {
-    if (debug) cerr << "ScanOperation pull " << rows << endl;
+    cerr << "ScanOperation pull " << rows << endl;
     
     if (buffers_.size() == 0) init_buffers();
     int n = columns_.size();
     vector<void*> res;
 
     int max_rows = rows;
+    int scanned = 0;
 
     for(int i = 0; i < n; ++i) {
-        int x = 0;
-		if(currentFile_ == dataSources_.end()) {
-			rows = 0;
-			res.push_back(buffers_[i]);
-		}
-		else {
-			switch(types_[i]) {
-				case OperationTree::ScanOperation_Type_INT:
-					while(x == 0 && currentFile_ != dataSources_.end()) {
-						x = (*currentFile_) -> GetInts(columns_[i], max_rows, (int32*)buffers_[i]);
-						if(x > 0) {
-							rows = x;
-							res.push_back(buffers_[i]);
-						}
-						else {
-							currentFile_++;
-							if(currentFile_ == dataSources_.end()) {
-								rows = 0;
-								res.push_back(buffers_[i]);
-							}
-						}
-					}
-					break;
+    	int rows_left = rows;
+    	switch (types_[i]) {
 
-				case OperationTree::ScanOperation_Type_DOUBLE:
-					while(x == 0 && currentFile_ != dataSources_.end()) {
-						x = (*currentFile_) -> GetDoubles(columns_[i], max_rows, (double*)buffers_[i]);
-						if(x > 0) {
-							rows = x;
-							res.push_back(buffers_[i]);
-						}
-						else {
-							currentFile_++;
-							if(currentFile_ == dataSources_.end()) {
-								rows = 0;
-								res.push_back(buffers_[i]);
-							}
-						}
+			case SINT :
+			{
+				int32 * buff = static_cast<int32*>(buffers_[i]);
+				while (currentFile_ != dataSources_.end()) {
+					int x = (*currentFile_) -> GetInts(columns_[i], rows_left, buff);
+					cerr << "YYYYYYY " << x << endl;
+					if (x == 0) {
+						currentFile_++;
+					} else {
+						buff += x;
+						rows_left -= x;
+						break;
 					}
-					break;
-
-				case OperationTree::ScanOperation_Type_BOOL:
-					while(x == 0 && currentFile_ != dataSources_.end()) {
-						x = (*currentFile_) -> GetByteBools(columns_[i], max_rows, (bool*)buffers_[i]);
-						if(x > 0) {
-							rows = x;
-							res.push_back(buffers_[i]);
-						}
-						else {
-							currentFile_++;
-							if(currentFile_ == dataSources_.end()) {
-								rows = 0;
-								res.push_back(buffers_[i]);
-							}
-						}
-					}
-					break;
+				}
+				scanned = rows - rows_left;
+				break;
 			}
-		}
+
+			case SDOUBLE :
+			{
+				double * buff = static_cast<double*>(buffers_[i]);
+				while (currentFile_ != dataSources_.end()) {
+					int x = (*currentFile_) -> GetDoubles(columns_[i], rows_left, buff);
+					if (x == 0) {
+						currentFile_++;
+					} else {
+						buff += x;
+						rows_left -= x;
+						break;
+					}
+				}
+				scanned = rows - rows_left;
+				break;
+			}
+
+			case SBOOL :
+			{
+				bool * buff = static_cast<bool*>(buffers_[i]);
+				while (currentFile_ != dataSources_.end()) {
+					int x = (*currentFile_) -> GetByteBools(columns_[i], rows_left, buff);
+					if (x == 0) {
+						currentFile_++;
+					} else {
+						buff += x;
+						rows_left -= x;
+						break;
+					}
+				}
+				scanned = rows - rows_left;
+				break;
+			}
+    	}
+    	res.push_back(buffers_[i]);
     }
+
+    rows = scanned;
+    cerr << "SCANNED " << rows << " " << numberOfFiles_ << endl;
     return res;
 }
 

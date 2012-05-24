@@ -19,10 +19,12 @@ int main(int argc, char ** argv) {
 
       int query_no = 1;
       //int max_rows = atoi(argv[3]); // TODO remove this shit before submitting
-      int max_rows = 2000;
+      int max_rows = 2000000;
 
       OperationTree::Operation operation;
-      const char * query_file = "../tests/q1.ascii";
+      const char * query_file = "../tests/r1.ascii";
+      int queryId = 1;
+
       std::fstream input(query_file, ios::in);
       if (!input) {
           cerr << argv[2] << ": File not found." << endl;
@@ -36,11 +38,12 @@ int main(int argc, char ** argv) {
           }
       }
 
-      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
+      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv, queryId);
       Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
       
 		//	delete server;
+      delete nei;
       google::protobuf::ShutdownProtobufLibrary();
 
       return 0;

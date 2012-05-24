@@ -1,0 +1,32 @@
+compute {
+  expressions {
+    operator: COLUMN
+    column_id: 0
+  }
+
+  expressions {
+    operator: COLUMN
+    column_id: 1
+  }
+
+  source {    
+    group_by {
+      aggregations {
+        type: COUNT
+      }
+
+      group_by_column: 0
+
+      source {
+        scan {
+          column: 0
+          type: INT
+          column: 1
+          type: INT
+          column: 2
+          type: INT
+        }
+      }
+    }
+  }
+}

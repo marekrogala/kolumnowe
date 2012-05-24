@@ -85,20 +85,7 @@ void Engine::MEngine::run() {
 				cerr << "Worker " << nei_ -> my_node_number() << " GOT "
 						<< rows << " ROWS" << endl;
 
-			/*
-			 for(int i = 0; i < data.size(); ++i) {
-			 switch(types[i]) {
-			 case OperationTree::ScanOperation_Type_INT:
-			 server_ -> ConsumeInts(i, rows, static_cast<int32*>(data[i]));
-			 break;
-			 case OperationTree::ScanOperation_Type_DOUBLE:
-			 server_ -> ConsumeDoubles(i, rows, static_cast<double*>(data[i]));
-			 break;
-			 case OperationTree::ScanOperation_Type_BOOL:
-			 server_ -> ConsumeByteBools(i, rows, static_cast<bool*>(data[i]));
-			 break;
-			 }
-			 }*/
+
 		}
 	}
 

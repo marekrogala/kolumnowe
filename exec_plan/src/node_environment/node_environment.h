@@ -105,7 +105,7 @@ class NodeEnvironmentInterface {
 
 // Assumes that parameters meaning is as follows:
 // ./program_name [listening_port] target_node_1_host:port target_node_2_host:port .. target_node_n_host:port
-NodeEnvironmentInterface* CreateNodeEnvironment(int argc, char** argv);
+NodeEnvironmentInterface* CreateNodeEnvironment(int argc, char** argv, int queryId);
 
 #endif  // NODE_ENVIRONMENT_H_
 
