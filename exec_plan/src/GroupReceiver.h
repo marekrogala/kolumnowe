@@ -12,7 +12,7 @@ namespace Engine {
 class GroupReceiver : public Operation {
 
 	private:
-		NodeEnvironmentInterface* node_env_;
+		NodeEnvironmentInterface* nei_;
 		std::vector<OperationTree::ScanOperation_Type> source_types_;
 		int worker_id;
 		const OperationTree::GroupByOperation &node_;
@@ -21,7 +21,7 @@ class GroupReceiver : public Operation {
 	public:
 		std::vector<void*> pull(int &rows);
 
-		GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperation &node);
+		GroupReceiver(NodeEnvironmentInterface *nei, OperationTree::GroupByOperation &node);
 
 		std::vector<OperationTree::ScanOperation_Type> init();
 };
