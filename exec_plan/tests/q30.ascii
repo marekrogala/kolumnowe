@@ -1,0 +1,29 @@
+# SELECT col_0 + col_1;
+
+compute {
+  source {
+    scan {
+      column: 0
+      type: INT
+      column: 1
+      type: INT
+      column: 2
+      type: DOUBLE
+      column: 3
+      type: DOUBLE
+
+    }
+  }
+  expressions {
+    operator: SUBTRACT
+    children {
+      operator: COLUMN
+      column_id: 2
+    }
+    children {
+      operator: COLUMN
+      column_id: 0
+    }
+  }
+
+}

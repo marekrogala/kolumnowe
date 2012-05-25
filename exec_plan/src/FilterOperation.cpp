@@ -20,16 +20,14 @@ OperationTree::ScanOperation_Type FilterOperation::get_source_type(int idx) {
 	return source_types_[idx];
 }
 
-FilterOperation::FilterOperation(Server * server, const OperationTree::FilterOperation & node, MemoryManager * mem_manager):
-
-
-		server_(server), node_(node), mem_manager_(mem_manager) {
+FilterOperation::FilterOperation(NodeEnvironmentInterface * nei, const OperationTree::FilterOperation & node, MemoryManager * mem_manager):
+		Operation(nei), node_(node), mem_manager_(mem_manager) {
 }
 
 vector<OperationTree::ScanOperation_Type> FilterOperation::init() {
 	if (debug) cerr << "FilterOperation::init()" << endl;
 
-    source_ = OperationBuilder::build(server_, node_.source(), mem_manager_);
+    source_ = OperationBuilder::build(nei_, node_.source(), mem_manager_);
     source_types_ = source_ -> init();
 
     for(int i = 0; i < source_types_.size(); ++i) {

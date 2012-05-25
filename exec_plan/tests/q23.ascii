@@ -1,0 +1,56 @@
+compute {
+  expressions {
+    operator: COLUMN
+    column_id: 0
+  }
+
+  expressions {
+    operator: COLUMN
+    column_id: 1
+  }
+
+expressions {
+    operator: COLUMN
+    column_id: 2
+  }
+
+expressions {
+    operator: COLUMN
+    column_id: 3
+  }
+
+expressions {
+    operator: COLUMN
+    column_id: 4
+  }
+
+  source {    
+    group_by {
+      aggregations {
+        type: COUNT
+      }
+
+      aggregations {
+        type: SUM
+        aggregated_column:3
+      }
+
+      group_by_column: 2
+      group_by_column: 0
+      group_by_column: 1 
+
+      source {
+        scan {
+          column: 0
+          type: INT
+          column: 1
+          type: INT
+          column: 2
+          type: BOOL
+          column: 3
+          type: DOUBLE
+        }
+      }
+    }
+  }
+}

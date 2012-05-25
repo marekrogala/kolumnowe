@@ -1,0 +1,94 @@
+# SELECT b WHERE b>40.0
+
+compute {
+  source {
+    filter {
+      source {
+        scan {
+          column: 0
+          type: INT
+          column: 1
+          type: DOUBLE
+        }
+      }
+      expression {
+        operator: EQUAL
+        children {
+          operator: COLUMN
+          column_id: 0
+        }
+        children {
+          operator: CONSTANT
+          constant_int32: 5
+        } 
+      }
+    }
+  }
+     expressions {
+                 operator: FLOATING_DIVIDE
+                                       children {
+                                                     operator: COLUMN
+                                                                             column_id: 0
+                                                                                     }
+                                   children {
+                                                 operator: COLUMN
+                                                                         column_id: 1
+                                                                                 }
+                                         }
+       expressions {
+               operator: ADD
+                                 children {
+                                           operator: COLUMN
+                                                               column_id: 0
+                                                                   }
+                             children {
+                                       operator: COLUMN
+                                                           column_id: 1
+                                                               }
+                               }
+         expressions {
+                 operator: SUBTRACT
+                                   children {
+                                             operator: COLUMN
+                                                                 column_id: 0
+                                                                     }
+                               children {
+                                         operator: COLUMN
+                                                             column_id: 1
+                                                                 }
+                                 }
+
+           expressions {
+                   operator: MULTIPLY
+                                     children {
+                                               operator: COLUMN
+                                                                   column_id: 0
+                                                                       }
+                                 children {
+                                           operator: COLUMN
+                                                               column_id: 1
+                                                                   }
+                                   }
+             expressions {
+                     operator: NEGATE
+                                       children {
+                                                 operator: COLUMN
+                                                                     column_id: 0
+                                                                         }
+                                     }
+
+expressions {
+                     operator: NEGATE
+                                       children {
+                                                 operator: COLUMN
+                                                                     column_id: 1
+                                                                         }
+                                     }
+
+
+
+  expressions {
+    operator: COLUMN
+    column_id: 0
+  }
+}

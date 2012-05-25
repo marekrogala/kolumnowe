@@ -10,18 +10,18 @@
 
 #include "OperationBuilder.h"
 #include "Operation.h"
-#include "server.h"
 #include "operations.pb.h"
 #include "ExpressionNode.h"
 #include "MemoryManager.h"
 #include "debug.h"
+#include "node_environment.h"
 
 namespace Engine {
 class ExpressionNode;
 
 class FilterOperation: public Operation {
 	public:
-	   FilterOperation(Server * server, const OperationTree::FilterOperation & node, MemoryManager * mem_manager);
+	   FilterOperation(NodeEnvironmentInterface * nei, const OperationTree::FilterOperation & node, MemoryManager * mem_manager);
 	            vector<void*> pull(int &rows);
 	            vector<OperationTree::ScanOperation_Type> init();
 	            OperationTree::ScanOperation_Type get_source_type(int idx);
@@ -31,7 +31,6 @@ class FilterOperation: public Operation {
 	            vector<void*> res_;
 	            vector<void*> buffered_;
 	            int buffered_size_;
-	            Server * server_;
 	            Operation * source_;
 	            vector<OperationTree::ScanOperation_Type> source_types_;
 	            ExpressionNode * expr_;

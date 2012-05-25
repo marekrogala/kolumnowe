@@ -16,8 +16,6 @@
 #include <map>
 #include <cstdlib>
 #include "debug.h"
-#include "server.h"
-#include "server.h"
 #include "operations.pb.h"
 #include "Operation.h"
 #include "MemoryManager.h"
@@ -52,9 +50,9 @@ public:
 	    {
 	    	size_t res = 0;
 	    	for(int i = 0; i < x.t.size(); ++i) {
-	    		res ^= hash<int32>()(x.t[i].i);
-	    		res ^= hash<double>()(x.t[i].d);
-	    		res ^= hash<bool>()(x.t[i].b);
+	    		res ^= (x.t[i].i);
+	    		res ^= static_cast<int32>(x.t[i].d);
+	    		res ^= static_cast<int32>(x.t[i].b);
 	    	}
 	    	return res;
 	    }

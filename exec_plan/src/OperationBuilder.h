@@ -8,7 +8,6 @@
 #ifndef OPERATIONBUILDER_H_
 #define OPERATIONBUILDER_H_
 
-#include "server.h"
 #include "operations.pb.h"
 #include "Operation.h"
 #include "ScanOperation.h"
@@ -22,7 +21,7 @@ namespace Engine {
 
 class OperationBuilder {
 public:
-	static Operation* build(Server * server, const OperationTree::Operation &operation, MemoryManager * mem_manager);
+	static Operation* build(NodeEnvironmentInterface * nei, const OperationTree::Operation &operation, MemoryManager * mem_manager);
 
 };
 

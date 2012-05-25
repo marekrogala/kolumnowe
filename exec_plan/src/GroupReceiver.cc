@@ -2,28 +2,27 @@
 #include <iostream>
 
 #include "GroupReceiver.h"
+#include "BlockSerializer.h"
 
 namespace Engine {
 
-GroupReceiver::GroupReceiver(NodeEnvironmentInterface *node_env, OperationTree::GroupByOperation &node) : 
-	node_env_(node_env), node_(node) {
-
+GroupReceiver::GroupReceiver(NodeEnvironmentInterface *nei, OperationTree::GroupByOperation &node) : 
+	Operation(nei), nei_(nei), node_(node) {
 	}
 
 std::vector<void*> GroupReceiver::pull(int &rows) {
 
-		char *data;
-		size_t data_len;
-  
-  sleep(10);
+	char *data;
+	size_t data_len;
 
-  std::cout<<"Receiving..."<<std::endl;
+  	std::cerr << "Receiving..." << std::endl;
 
-  while(true){
-		data = node_env_->ReadPacketBlocking(&data_len);
-		std::cerr << data << std::endl;
-  }
-		return std::vector<void*>();
+	data = nei_->ReadPacketBlocking(&data_len);
+	
+	BlockSerializer serializer;
+	rows = serializer.deserializeBlock(source_types_, data_len, data, buffers_);
+
+	return buffers_;
 }
 
 std::vector<OperationTree::ScanOperation_Type> GroupReceiver::init() {

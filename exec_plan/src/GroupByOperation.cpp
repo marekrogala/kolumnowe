@@ -24,12 +24,12 @@
 
 namespace Engine {
 
-GroupByOperation::GroupByOperation(Server * server, const OperationTree::GroupByOperation & node, MemoryManager * mem_manager):
-		server_(server), node_(node), mem_manager_(mem_manager), first_time_(true) {
+GroupByOperation::GroupByOperation(NodeEnvironmentInterface * nei, const OperationTree::GroupByOperation & node, MemoryManager * mem_manager):
+		Operation(nei), node_(node), mem_manager_(mem_manager), first_time_(true) {
 }
 
 vector<OperationTree::ScanOperation_Type> GroupByOperation::init() {
-	source_ = OperationBuilder::build(server_, node_.source(), mem_manager_);
+	source_ = OperationBuilder::build(nei_, node_.source(), mem_manager_);
 
 	source_types_ = source_ -> init();
 

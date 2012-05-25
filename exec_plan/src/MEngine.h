@@ -3,8 +3,6 @@
 
 #include "Operation.h"
 #include "operations.pb.h"
-#include "server.h"
-#include "Operation.h"
 #include "debug.h"
 #include <iostream>
 #include <vector>
@@ -15,12 +13,12 @@ namespace Engine {
     class MEngine {
 
         public:
-            MEngine(const OperationTree::Operation &operation, Server * server, int max_rows);
+            MEngine(NodeEnvironmentInterface * nei, const OperationTree::Operation &operation, int max_rows);
             void run();
 
         private:
+            NodeEnvironmentInterface * nei_;
             Operation * root_operation_;
-            Server * server_;
             int max_rows_;
 			bool consume;
     };
