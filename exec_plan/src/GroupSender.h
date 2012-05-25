@@ -30,6 +30,7 @@ class GroupSender : public Operation {
 		void scatter_data_into_buckets(vector<void*> data, int rows, int32* hashes);	
 		int32* count_hashes(vector<void*> &data, int rows);
 		bool bucket_ready_to_send(int bucket);
+		void send_bucket(int bucket_number);
 
 
 	public:

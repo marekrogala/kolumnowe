@@ -63,6 +63,11 @@ int BlockSerializer::serializeBlock(
 int BlockSerializer::deserializeBlock(
 		vector<OperationTree::ScanOperation_Type> types, int bufferSize,
 		char * buffer, vector<void*> & result) {
+
+	if(bufferSize == 0) {
+		return 0;
+	}
+	
 	int rows;
 	int sum = 0;
 	for (int i = 0; i < types.size(); i++) {
