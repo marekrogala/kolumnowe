@@ -1,7 +1,7 @@
 #ifndef LAYERS_H_
 #define LAYERS_H_
 
-#include "node_environment/node_environment.h"
+#include "node_environment.h"
 
 int inline CountNodesInLayer(NodeEnvironmentInterface* nei, int parity){
   int nodes = nei->nodes_count();

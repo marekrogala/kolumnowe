@@ -26,7 +26,7 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 	
 	if(eofs_to_be_received == 0) {
 	  rows = 0;
-	  return NULL;
+	  return std::vector<void*>();
 	}
 	
 	BlockSerializer serializer;
