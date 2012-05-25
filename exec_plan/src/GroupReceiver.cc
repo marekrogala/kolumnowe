@@ -17,7 +17,17 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 
 	std::cerr << "Receiving..." << std::endl;
 
-	data = nei_->ReadPacketBlocking(&data_len);
+	int eofs_to_be_received = CountNodesInOtherLayer(nei_);
+
+	do {
+	  data = nei_->ReadPacketBlocking(&data_len);
+	  if(data_len == 0) eofs_to_be_received--;
+	} while(data_len == 0 && eofs_to_be_received > 0);
+	
+	if(eofs_to_be_received == 0) {
+	  rows = 0;
+	  return NULL;
+	}
 	
 	BlockSerializer serializer;
 	rows = serializer.deserializeBlock(source_types_, data_len, data, buffers_);
