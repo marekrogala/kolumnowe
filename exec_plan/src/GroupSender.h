@@ -16,7 +16,8 @@ class GroupSender : public Operation {
 	private:
 		NodeEnvironmentInterface *nei_;
 		Operation *source_;
-		std::vector<OperationTree::ScanOperation_Type> source_types_;		
+		std::vector<OperationTree::ScanOperation_Type> source_types_;
+		std::vector<OperationTree::ScanOperation_Type> hash_column_types_;
 		
 		// node of the original tree corresponding
 		const OperationTree::GroupByOperation & node_;
@@ -28,7 +29,8 @@ class GroupSender : public Operation {
 		std::vector<int> buckets_load_;
 
 		void scatter_data_into_buckets(vector<void*> data, int rows, int32* hashes);	
-		int32* count_hashes(vector<void*> &data, int rows);
+		int32* count_hashes(const vector<void*> &dataToHash, const vector<OperationTree::ScanOperation_Type> &typesToHash, int rows);
+		void cast_to_hash_columns(const std::vector<void*> &data, std::vector<void*> &result);
 		bool bucket_ready_to_send(int bucket);
 		void send_bucket(int bucket_number);
 

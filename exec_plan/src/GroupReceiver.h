@@ -1,7 +1,6 @@
 #ifndef GROUP_RECEIVER
 #define GROUP_RECEIVER
 
-#include "node_environment.h"
 #include "operations.pb.h"
 #include "UniversalHashmap.h"
 #include "RealUniversalHashmap.h"
