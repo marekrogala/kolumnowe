@@ -21,13 +21,25 @@ int main(int argc, char ** argv) {
       //int max_rows = atoi(argv[3]); // TODO remove this shit before submitting
       int max_rows = 2000000;
 
-      OperationTree::Operation operation;
-      const char * query_file = "../tests/r1.ascii";
-      int queryId = 1;
 
-      std::fstream input(query_file, ios::in);
+      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
+      //pobranie zapytania
+		int operationAsciiLen;
+		char* operationAscii;
+	  operationAscii = ReadPacketBlocking(&operationAsciiLen);
+      //wyslanie do nastepnego if != ostatni
+	  if(nei->my_node_number() != 0) {
+		  SendPacket(nei->my_node_number+1, operationAscii, operationAsciiLen);
+	  }
+	  // tworzenie operation
+
+      OperationTree::Operation operation;
+      //const char * query_file = "../tests/r1.ascii";
+      //int queryId = 1;
+
+      std::fstream input(operationAscii, ios::in);
       if (!input) {
-          cerr << argv[2] << ": File not found." << endl;
+          cerr << ": File not found." << endl;
           return -1;
       } else {
           char data[BUFF_SIZE];
@@ -38,10 +50,8 @@ int main(int argc, char ** argv) {
           }
       }
 
-      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
-      //pobranie zapytania
-      //wyslanie do nastepnego if != ostatni
-      Engine::MEngine engine(nei, operation, max_rows);
+
+	  Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
       
 		//	delete server;
