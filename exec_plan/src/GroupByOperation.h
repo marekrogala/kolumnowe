@@ -10,7 +10,7 @@
 
 #include "Operation.h"
 #include "OperationBuilder.h"
-#include "node_environment.h"
+#include "node_environment/node_environment.h"
 #include "operations.pb.h"
 #include "ExpressionNode.h"
 #include "MemoryManager.h"

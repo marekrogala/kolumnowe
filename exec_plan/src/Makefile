@@ -8,10 +8,10 @@ BOOST_THREAD_LIB = -lboost_thread
 CCFLAGS = -O2 -std=c++0x
 CXXFLAGS   =  ../grid/src/node_environment/libnode_environment.a ../grid/src/utils/libutils.a ../grid/src/netio/libnetio.a $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(BOOST_CPPFLAGS) -lprotobuf $(OPTIONS)
 
-FILES = ComputeOperation.o ExpressionNode.o FilterOperation.o MemoryManager.o MEngine.o  Operation.h ScanOperation.o ComputeOperation.o ExpressionNode.o GroupByOperation.o MemoryManager.o OperationBuilder.o operations.pb.cc ScanOperation.o UniversalHashmap.h engine.o FilterOperation.o RealUniversalHashmap.o operations.pb.o
+FILES = ComputeOperation.o ExpressionNode.o FilterOperation.o MemoryManager.o MEngine.o  Operation.h ScanOperation.o GroupByOperation.o OperationBuilder.o UniversalHashmap.h engine.o RealUniversalHashmap.o operations.pb.o
 
 $(PROGNAME): $(FILES)
-	$(CXX) $(CXXFLAGS) -o $(PROGNAME) $(FILES)
+	$(CXX) -o $(PROGNAME) $(FILES) $(CXXFLAGS)
 
 net_tester: net_tester.cc GroupSender.cc GroupReceiver.cc operations.pb.cc 
 	$(CC) net_tester.cc GroupSender.cc GroupReceiver.cc BlockSerializer.cc operations.pb.cc $(CXXFLAGS) -o net_tester
@@ -26,6 +26,6 @@ clean:
 #	mkdir -p proto
 #	protoc operations.proto --cpp_out=.
 
-%.o: %.cc %.h operations.pb.h
+%.o: %.cc %.h
 	$(CC) -c $(CCFLAGS) $< -o $*.o
 

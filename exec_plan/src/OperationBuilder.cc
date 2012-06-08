@@ -6,7 +6,6 @@
  */
 
 #include "OperationBuilder.h"
-#include "node_environment.h"
 #include "debug.h"
 
 Engine::Operation* Engine::OperationBuilder::build(NodeEnvironmentInterface * nei,
