@@ -6,7 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include "MEngine.h"
-#include "node_environment.h"
+#include "node_environment/node_environment.h"
 
 const int BUFF_SIZE = 10000;
 
@@ -38,7 +38,7 @@ int main(int argc, char ** argv) {
           }
       }
 
-      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv, queryId);
+      NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
       Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
       
