@@ -34,6 +34,7 @@ void Reader(NodeEnvironmentInterface* nei) {
 int main(int argc, char** argv) {
   boost::scoped_ptr<NodeEnvironmentInterface> nei(
       CreateNodeEnvironment(argc, argv));
+  CHECK(nei.get() != NULL, "Cannot create NodeEnvironment");
 
   // Lets open data sources.
   boost::scoped_ptr<DataSourceInterface> data_source_0(nei->OpenDataSourceFile(0));
@@ -56,7 +57,6 @@ int main(int argc, char** argv) {
     CHECK(strcmp("INIT", packet.get()) == 0, "");
     nei->SendPacket(nei->my_node_number() + 1, "INIT", 5);
   }
-  sleep(5);
   boost::thread t0(&Reader, nei.get());
   boost::thread t1(&Writer, nei.get());
   boost::thread t2(&Writer, nei.get());

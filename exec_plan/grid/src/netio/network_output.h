@@ -28,7 +28,7 @@ class NetworkOutput {
   const std::string service_;
   boost::mutex mutex_;
   boost::asio::io_service io_service_;
-  boost::asio::ip::tcp::socket socket_;
+  boost::scoped_ptr<boost::asio::ip::tcp::socket> socket_;
 
 };
 

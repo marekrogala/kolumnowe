@@ -9,11 +9,18 @@
 
 #include "utils/ip_address.h"
 #include "utils/logger.h"
+#include "netio/basic.h"
 #include "netio/network_input.h"
 #include "netio/network_output.h"
 #include "node_environment/data_server.h"
+#include "grid_server/proto/grid_server.pb.h"
 
 namespace {
+
+using boost::asio::ip::tcp;
+using boost::asio::buffer;
+using boost::asio::write;
+using boost::asio::read;
 
 class DataSource : public DataSourceInterface {
  public:
@@ -137,15 +144,36 @@ class NodeEnvironment : public NodeEnvironmentInterface {
 } // namespace
 
 NodeEnvironmentInterface* CreateNodeEnvironment(int argc, char** argv) {
-  CHECK(argc >= 4, "Requires at least 3 arguments [node number] [port] [target_node:port]*");
-  int node_number = atoi(argv[1]);
-  int listening_port = atoi(argv[2]);
-  std::vector<NetworkOutput*> outputs;
-  for (int i = 3; i < argc; ++i) {
-    IpAddress address = IpAddress::Parse(argv[i]);
-    outputs.push_back(new NetworkOutput(address.getHostAddress(),
-                                        address.getService()));
+  CHECK(argc == 2, "Requires 1 argument [server_node:port]");
+  IpAddress server_address = IpAddress::Parse(argv[1]);
+  std::auto_ptr<NetworkInput> network_input(new NetworkInput());
+  uint16_t listening_port = network_input->port();
+  LOG1("Running node on port: %d", listening_port);
+
+  boost::asio::io_service io_service;
+  boost::scoped_ptr<tcp::socket> socket(
+      ConnectClient(io_service, server_address.getHostAddress(),
+                    server_address.getService()));
+  CHECK(SendPacket(*socket, &listening_port, sizeof(listening_port)),
+                   "Write failed");
+  uint32_t length;
+  boost::scoped_array<char> data(ReadPacket(*socket, &length));
+  if (data.get() == NULL) {
+    LOG0("Cannot load topology from server");
+    return NULL;
   }
-  LOG1("Running server listening on port: %d", listening_port);
-  return new NodeEnvironment(node_number, new NetworkInput(listening_port), outputs);
+  TopologyAssigment assigment;
+  LOG1("Parsing topology of length %d", length);
+  if (!assigment.ParseFromArray(data.get(), length)) return NULL;
+  LOG1("Got topology: %s", assigment.DebugString().c_str());
+  std::vector<NetworkOutput*> outputs;
+  for (int i = 0; i < assigment.peers_size(); ++i) {
+    std::ostringstream ss;
+    ss << assigment.peers(i).port();
+    outputs.push_back(new NetworkOutput(assigment.peers(i).host(), ss.str()));
+  }
+  LOG0("Returning NodeEnvironment.");
+  return new NodeEnvironment(assigment.your_number(),
+                            network_input.release(),
+                            outputs);
 }

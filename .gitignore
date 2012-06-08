@@ -13,3 +13,7 @@
 
 ~*
 *~
+exec_plan/src/.deps
+exec_plan/src/net_tester
+exec_plan/Debug
+exec_plan/.metadata

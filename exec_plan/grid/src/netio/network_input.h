@@ -38,15 +38,28 @@ class InputConnection {
                   boost::asio::ip::tcp::endpoint* endpoint,
                   util::PCQueue<Packet*>* pc_queue);
 
+  virtual ~InputConnection();
+
   void read_handle(const boost::system::error_code& error,
                    std::size_t bytes_transferred);
 
   void schedule_read();
 
+  std::size_t write(std::size_t size, char* data);
+
+  bool SendPacket(const std::string& packet);
+  const boost::asio::ip::tcp::endpoint& endpoint() const { return *endpoint_; }
+
+  bool is_active() const {
+    return socket_->is_open() &&
+        ((status_ == WAIT_FOR_DATA) || (status_ == WAIT_FOR_LENGTH));
+  };
+
  private:
   enum StatusEnum {
     WAIT_FOR_LENGTH,
     WAIT_FOR_DATA,
+    DISCONNECTED
   };
 
   uint32_t buffer_length() const {
@@ -68,10 +81,9 @@ class InputConnection {
 
 class NetworkInput {
  public:
+  NetworkInput();
   NetworkInput(short listening_port);
   virtual ~NetworkInput();
-
-  void accept_connection(const boost::system::error_code& e);
 
   // Reads a single packet sent to this node.
   // Blocks if there is not packet ready until the packet arrive.
@@ -85,12 +97,21 @@ class NetworkInput {
   // destroy it using delete[].
   virtual char* ReadPacketNotBlocking(std::size_t* data_len);
 
+  int connections_count() const;
+  const boost::asio::ip::tcp::endpoint& endpoint(int connection_id) const;
+  bool is_active(int connection_id) const;
+
+  uint16_t port() const { return acceptor_.local_endpoint().port(); };
+
  private:
+  void accept_connection(const boost::system::error_code& e);
+
   const static std::size_t kThreadsCount = 8;
   const static std::size_t kQueueSize = 2 * kThreadsCount;
 
   void start_accept();
 
+  mutable boost::mutex mutex_;
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::acceptor acceptor_;
   std::auto_ptr<boost::asio::ip::tcp::socket> waiting_socket_;

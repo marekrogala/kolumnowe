@@ -13,11 +13,15 @@
 #include <boost/thread/thread.hpp>
 #include <string.h>
 
+#include "basic.h"
 #include "network_input.h"
 #include "utils/logger.h"
 #include "utils/pcqueue.h"
 
 using boost::asio::ip::tcp;
+using boost::asio::buffer;
+using boost::asio::read;
+using boost::asio::write;
 
 InputConnection::InputConnection(boost::asio::io_service* io_service,
                                  boost::asio::ip::tcp::socket* socket,
@@ -31,6 +35,12 @@ InputConnection::InputConnection(boost::asio::io_service* io_service,
   CHECK(pc_queue_ != NULL, "Illegal state.");
   schedule_read();
 };
+
+InputConnection::~InputConnection() {
+  if (socket_ != NULL) {
+    socket_->close();
+  }
+}
 
 void InputConnection::schedule_read() {
   switch (status_) {
@@ -68,19 +78,31 @@ void InputConnection::read_handle(const boost::system::error_code& error,
         pc_queue_->Produce(buffer_content_.release());
         status_ = WAIT_FOR_LENGTH;
         break;
+      case DISCONNECTED:
+        return;
     }
     schedule_read();
   } else {
     LOG4("%s Error: %s %d %s\n", describe().c_str(), error.category().name(),
          error.value(), error.message().c_str());
-   if (error.value() == boost::asio::error::eof) {
-     LOG1("%s CONNECTION LOST", describe().c_str());
-     // TODO(ptab) In a full-framework implementation we should destroy the InputConnection instance
-     // here, as it is not useful anymore.
-   } else {
-     CHECK(false, "Unexpected error in connection layer");
-   }
+    if (error.value() == boost::asio::error::eof) {
+      LOG1("%s CONNECTION LOST", describe().c_str());
+      // TODO(ptab) In a full-framework implementation we should destroy the InputConnection instance
+      // here, as it is not useful anymore.
+    } else {
+      CHECK(false, "Unexpected error in connection layer");
+    }
+    status_ = DISCONNECTED;
   }
+}
+
+std::size_t InputConnection::write(std::size_t size, char* data) {
+  return boost::asio::write(*socket_, boost::asio::buffer(data, size));
+}
+
+bool InputConnection::SendPacket(const std::string& data) {
+  if (!is_active()) return false;
+  return ::SendPacket(*socket_, data);
 }
 
 std::string InputConnection::describe() const {
@@ -90,6 +112,18 @@ std::string InputConnection::describe() const {
 }
 
 // --------------- InputConnection --------------------------------------------
+
+NetworkInput::NetworkInput()
+    : acceptor_(io_service_, tcp::endpoint(), true),
+      pc_queue_(new util::PCQueue<Packet*>(/*max_size = */ kQueueSize)) {
+  start_accept();
+  for (std::size_t i = 0; i < kThreadsCount; ++i) {
+    boost::shared_ptr<boost::thread> thread(
+        new boost::thread(boost::bind((size_t (boost::asio::io_service::*)())(&boost::asio::io_service::run), &io_service_)));
+    threads_.push_back(thread);
+  }
+}
+
 
 NetworkInput::NetworkInput(short listening_port)
     : acceptor_(io_service_, tcp::endpoint(tcp::v4(), listening_port), true),
@@ -112,8 +146,8 @@ void NetworkInput::start_accept() {
 
 }
 
-
 void NetworkInput::accept_connection(const boost::system::error_code& e) {
+  boost::mutex::scoped_lock lock(mutex_);
   LOG2("%s:%d CONNECTED.", waiting_endpoint_->address().to_string().c_str(),
                            waiting_endpoint_->port());
   connections_.push_back(new InputConnection(&io_service_,
@@ -151,6 +185,22 @@ char* NetworkInput::ReadPacketNotBlocking(std::size_t* data_len) {
   }
   *data_len = packet->size();
   return packet->release_data();
+}
+
+int NetworkInput::connections_count() const {
+  boost::mutex::scoped_lock lock(mutex_);
+  return connections_.size();
+}
+
+const tcp::endpoint& NetworkInput::endpoint(int connection_id) const {
+  boost::mutex::scoped_lock lock(mutex_);
+  CHECK(connection_id < connections_count(), "");
+  return connections_[connection_id]->endpoint();
+}
+
+bool NetworkInput::is_active(int connection_id) const {
+  boost::mutex::scoped_lock lock(mutex_);
+  return connections_[connection_id]->is_active();
 }
 
 

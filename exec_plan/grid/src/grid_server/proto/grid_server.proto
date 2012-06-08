@@ -1,0 +1,9 @@
+message Peer {
+  required string host = 1;
+  required int32 port = 2;
+}
+
+message TopologyAssigment {
+  repeated Peer peers = 1;
+  required int32 your_number = 2;
+}
