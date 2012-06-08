@@ -1,5 +1,7 @@
 #include <cassert>
 #include <stdlib.h>
+#include <algorithm>
+#include <boost/functional/hash.hpp>
 
 #include "GroupSender.h"
 #include "BlockSerializer.h"
@@ -8,9 +10,9 @@
 namespace Engine {
 
 struct HashFunction {
-	Key row;
+	int row;
 
-	HashFunction(Key row) : k(row) {}
+	HashFunction(int row) : row(row) {}
 
 	// hash function copied from
 	// http://www.concentric.net/~Ttwang/tech/inthash.htm
@@ -27,15 +29,15 @@ struct HashFunction {
 	inline long operator() (void *column, OperationTree::ScanOperation_Type type) {
 		switch (type) {
 	
-			case INT:
-				return hashUnsigned( *((int*) column + k) ); 
+			case OperationTree::ScanOperation_Type_INT:
+				return hashUnsigned( *((int*) column + row) ); 
 
-			case DOUBLE:
-				// there should be no hashing on doubles
-				return 0; //doubleHashTable.hash_function()(*((double*) column + k));
+			case OperationTree::ScanOperation_Type_DOUBLE:
+				assert(false && "there should be no hashing of doubles!");
+				break;
 
 			default:
-				return *((bool*) column + k); // identity hash function for bools
+				return *((bool*) column + row); // identity hash function for bools
 		}
 	}
 };
@@ -55,29 +57,30 @@ int32* GroupSender::count_hashes(const vector<void*> &dataToHash,
 	// temporary vector to count hashes for each column
 	vector<int32> columnHashValues = vector<int32>(dataToHash.size());
 	
+	// array with hashes for the whole rows
+	int32* res = new int32[rows];
+
 	// calculate hash for each row independently
 	for (int row = 0; row < rows; ++row) {
 
 		// calculate hash function for each column first
-		HashFunction hashFunction(k);
+		HashFunction hashFunction(row);
 		transform(dataToHash.begin(), dataToHash.end(), typesToHash.begin(), columnHashValues.begin(), hashFunction);
 
-
-
-
-
+		// combine hash values to obtain one hash value for the whole row
+		res[row] = boost::hash_range(columnHashValues.begin(), columnHashValues.end());
 	}	
-
-	// rows hashes
-	int32* res = new int32[rows];
-
 
 	return res;
 }
 
 void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32* hashes) {
 	for (int row = 0; row < rows; ++row) {
+
+		// calculate the number ofbucket
 		int bucket = hashes[row] % CountNodesInOtherLayer(nei_);
+
+		// copy the data to the bucket
 		for (int column = 0, columns = data.size(); column < columns; ++columns)
 			switch (source_types_[columns]) {
 				case OperationTree::ScanOperation_Type_INT:
@@ -88,8 +91,16 @@ void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32*
 				case OperationTree::ScanOperation_Type_BOOL:
 					std::fill_n( (bool*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((bool*) data[columns] + row));
 			}
+
 		buckets_load_[bucket]++;
 	}
+}
+
+// take all the columns and returns columns for which hashes will be computed 
+// (columns we will group by)
+void GroupSender::cast_to_hash_columns(const vector<void*> &data, vector<void*> &result) {
+	// TODO change this dummy implementation
+	result = data;
 }
 
 bool GroupSender::bucket_ready_to_send(int bucket) {
@@ -119,8 +130,12 @@ vector<void*> GroupSender::pull(int &rows) {
 
 	do {
 		data = source_->pull(rows);
+
+		// cast columns to columns for which we computw hashes
+		vector<void*> hashed_columns_data;
+		cast_to_hash_columns(data, hashed_columns_data);
 	
-		int32* hashes = count_hashes(data, rows);
+		int32* hashes = count_hashes(hashed_columns_data, hash_column_types_, rows);
 
 		scatter_data_into_buckets(data, rows, hashes);
 

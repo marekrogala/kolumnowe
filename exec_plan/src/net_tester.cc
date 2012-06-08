@@ -10,8 +10,7 @@
 #include "GroupSender.h"
 #include "GroupReceiver.h"
 #include "operations.pb.h"
-#include "node_environment.h"
-#include "logger.h"
+#include "node_environment/node_environment.h"
 
 using namespace std;
 using namespace Engine;
