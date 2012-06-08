@@ -39,6 +39,8 @@ int main(int argc, char ** argv) {
       }
 
       NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
+      //pobranie zapytania
+      //wyslanie do nastepnego if != ostatni
       Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
       
