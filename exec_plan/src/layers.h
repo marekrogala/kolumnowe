@@ -1,7 +1,7 @@
 #ifndef LAYERS_H_
 #define LAYERS_H_
 
-#include "node_environment.h"
+#include "node_environment/node_environment.h"
 
 /* nodes 0..floor(n/2)-1   --> Layer number 0
    nodes floor(n/2)..n-1   --> Layer number 1
