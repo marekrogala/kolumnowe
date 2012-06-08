@@ -37,7 +37,7 @@ int inline CountNodesInOtherLayer(NodeEnvironmentInterface* nei){
 void inline SendPacket(NodeEnvironmentInterface* nei, uint32 target_node,
               const char* data, int  data_len){
   target_node++;
-  if(GetMyLayer(nei) == 0) target_node += CountNodesInLayer(0);
+  if(GetMyLayer(nei) == 0) target_node += CountNodesInLayer(nei, 0);
   nei->SendPacket(target_node, data, data_len);
 }
 
