@@ -24,12 +24,12 @@ int main(int argc, char ** argv) {
 
       NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
       //pobranie zapytania
-		int operationAsciiLen;
+		size_t operationAsciiLen;
 		char* operationAscii;
-	  operationAscii = ReadPacketBlocking(&operationAsciiLen);
+	  operationAscii = nei->ReadPacketBlocking(&operationAsciiLen);
       //wyslanie do nastepnego if != ostatni
-	  if(nei->my_node_number() != 0) {
-		  SendPacket(nei->my_node_number+1, operationAscii, operationAsciiLen);
+	  if(nei->my_node_number() != nei->nodes_count()-1) {
+		  nei->SendPacket(nei->my_node_number+1, operationAscii, (int)operationAsciiLen);
 	  }
 	  // tworzenie operation
 
