@@ -16,7 +16,7 @@
 #include "GroupByOperation.h"
 #include "MemoryManager.h"
 #include "debug.h"
-#include "node_environment/node_environment.h"
+#include "node_environment.h"
 
 namespace Engine {
 
