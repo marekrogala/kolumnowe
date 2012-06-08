@@ -6,7 +6,7 @@
 #include "Operation.h"
 #include "ExpressionNode.h"
 #include "MemoryManager.h"
-#include "node_environment/node_environment.h"
+#include "node_environment.h"
 #include "debug.h"
 
 namespace Engine {
