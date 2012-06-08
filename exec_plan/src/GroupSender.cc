@@ -7,14 +7,71 @@
 
 namespace Engine {
 
+struct HashFunction {
+	Key row;
+
+	HashFunction(Key row) : k(row) {}
+
+	// hash function copied from
+	// http://www.concentric.net/~Ttwang/tech/inthash.htm
+	static inline unsigned int hashUnsigned( unsigned int a) {
+		a = (a+0x7ed55d16) + (a<<12);
+		a = (a^0xc761c23c) ^ (a>>19);
+		a = (a+0x165667b1) + (a<<5);
+		a = (a+0xd3a2646c) ^ (a<<9);
+		a = (a+0xfd7046c5) + (a<<3);
+		a = (a^0xb55a4f09) ^ (a>>16);
+		return a;
+	}
+
+	inline long operator() (void *column, OperationTree::ScanOperation_Type type) {
+		switch (type) {
+	
+			case INT:
+				return hashUnsigned( *((int*) column + k) ); 
+
+			case DOUBLE:
+				// there should be no hashing on doubles
+				return 0; //doubleHashTable.hash_function()(*((double*) column + k));
+
+			default:
+				return *((bool*) column + k); // identity hash function for bools
+		}
+	}
+};
+
+
+
 GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, const OperationTree::GroupByOperation &node) : 
 	Operation(nei), nei_(nei), source_(source), node_(node) {
 
 	}
 
-int32* GroupSender::count_hashes(vector<void*> &data, int rows) {
-	// dummy implementation (hashes equal to 0)
-	int32* res = new int32[rows]();
+// dataToHash are columns that we should calculate hash for (not all the columns)
+int32* GroupSender::count_hashes(const vector<void*> &dataToHash, 
+		const vector<OperationTree::ScanOperation_Type> &typesToHash, int rows) {
+	// dummy implementation (hashes equal to 0) 	
+	
+	// temporary vector to count hashes for each column
+	vector<int32> columnHashValues = vector<int32>(dataToHash.size());
+	
+	// calculate hash for each row independently
+	for (int row = 0; row < rows; ++row) {
+
+		// calculate hash function for each column first
+		HashFunction hashFunction(k);
+		transform(dataToHash.begin(), dataToHash.end(), typesToHash.begin(), columnHashValues.begin(), hashFunction);
+
+
+
+
+
+	}	
+
+	// rows hashes
+	int32* res = new int32[rows];
+
+
 	return res;
 }
 
