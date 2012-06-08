@@ -2,7 +2,7 @@
 
 # libtool - Provide generalized library-building support services.
 # Generated automatically by config.status (grid_framework) 0.4
-# Libtool was configured on host orange08:
+# Libtool was configured on host students:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 #
 #   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
@@ -86,7 +86,7 @@ NM="/usr/bin/nm -B"
 LN_S="ln -s"
 
 # What is the maximum length of a command?
-max_cmd_len=3458764513820540925
+max_cmd_len=1572864
 
 # Object file suffix (normally "o").
 objext=o
@@ -237,7 +237,7 @@ hardcode_into_libs=yes
 sys_lib_search_path_spec="/usr/lib64/gcc/x86_64-pld-linux/4.6.3 /usr/lib64 /lib64"
 
 # Run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/lib/nvidia /usr/lib/vdpau /usr/lib64/nvidia /usr/lib64/vdpau /opt/oracle10g/lib /opt/oracle10g/jdbc/lib /opt/XLE/lib "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/oracle10g/lib /opt/oracle10g/jdbc/lib /opt/XLE/lib "
 
 # Whether dlopen is supported.
 dlopen_support=unknown
