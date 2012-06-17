@@ -12,6 +12,7 @@ namespace Engine {
         public:
             virtual vector<void*> pull(int &rows) = 0;
             virtual vector<OperationTree::ScanOperation_Type> init() = 0;
+            virtual void cutTree(int layerNumber) = 0;
             virtual OperationTree::ScanOperation_Type get_source_type(int idx) {
             	assert(false);
             }

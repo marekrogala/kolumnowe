@@ -3,6 +3,7 @@
 #include "ScanOperation.h"
 #include "OperationBuilder.h"
 #include "BlockSerializer.h"
+#include "layers.h"
 
 Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 		const OperationTree::Operation &operation, int max_rows) :
@@ -14,19 +15,19 @@ Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 
 void Engine::MEngine::run() {
 	cerr << "Started running query." << endl;
+
 	vector<OperationTree::ScanOperation_Type> types = root_operation_ -> init();
 
-	cerr << "Result type" << endl;
-	for (int i = 0; i < types.size(); ++i) {
-		cerr << types[i] << " ";
-	}
-	cerr << endl;
+  cerr << "Result type" << endl;
+  for (int i = 0; i < types.size(); ++i) {
+	  cerr << types[i] << " ";
+  }
+  cerr << endl;
 
 	int all_rows = 0;
-	int whoGathers = 0;
 	BlockSerializer blockSerializer;
 
-	if (whoGathers == nei_ ->my_node_number()) {
+	if (WhoGathers() == nei_ ->my_node_number()) {
 		DataSinkInterface * sink = nei_ -> OpenDataSink();
 
 		int ile = nei_ -> nodes_count() - 1;
@@ -43,8 +44,7 @@ void Engine::MEngine::run() {
 			cerr << "Worker " << nei_ -> my_node_number() << " got packet size = " << len << endl;
 			vector<void*> data;
 
-			int rows = blockSerializer.deserializeBlock(types, len, buffer,
-					data);
+			int rows = blockSerializer.deserializeBlock(types, len, buffer, data);
 			all_rows += rows;
 			cerr << "Worker " << nei_ -> my_node_number() << " rows " << rows << endl;
 			for (int i = 0; i < types.size(); ++i) {
@@ -66,17 +66,25 @@ void Engine::MEngine::run() {
 
 		}
 	} else {
+	
+    /********
+    * cutTree(layerNumber) buduje:
+    * dla layerNumber = 0: polowe drzewa: bez skanow
+    * dla layerNumber = 1: polowe drzewa: ze scanami
+    **********/
+    //root_operation_ -> cutTree(GetMyLayer(nei_));    ////// ODKOMENTOWAC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
 		while (true) {
 			int rows = max_rows_;
 			vector<void*> data = root_operation_ -> pull(rows);
 			if (rows == 0) {
-				nei_ -> SendPacket(whoGathers, NULL, 0);
+				nei_ -> SendPacket(WhoGathers(), NULL, 0);
 				break;
 			}
 			char * buffer;
 			int bufferSize = blockSerializer.serializeBlock(types, data, rows,
 					&buffer);
-				nei_ -> SendPacket(whoGathers, buffer, bufferSize);
+				nei_ -> SendPacket(WhoGathers(), buffer, bufferSize);
 
 				delete buffer;
 

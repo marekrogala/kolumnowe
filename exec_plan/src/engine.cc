@@ -37,21 +37,14 @@ int main(int argc, char ** argv) {
       //const char * query_file = "../tests/r1.ascii";
       //int queryId = 1;
 
-      std::fstream input(operationAscii, ios::in);
-      if (!input) {
-          cerr << ": File not found." << endl;
+
+      if (!google::protobuf::TextFormat::ParseFromString(string(operationAscii), &operation)) {
+          cerr << "Failed to parse operation." << endl;
           return -1;
-      } else {
-          char data[BUFF_SIZE];
-          input.read(data, BUFF_SIZE);
-          if (!google::protobuf::TextFormat::ParseFromString(string(data), &operation)) {
-              cerr << "Failed to parse operation." << endl;
-              return -1;
-          }
       }
 
 
-	  Engine::MEngine engine(nei, operation, max_rows);
+	    Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
       
 		//	delete server;
