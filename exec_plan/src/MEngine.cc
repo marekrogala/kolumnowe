@@ -16,13 +16,23 @@ Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 void Engine::MEngine::run() {
 	cerr << "Started running query." << endl;
 
-	// ASSUME NO GROUP
-	Layers::init(1, nei_);
+	bool group_flag = 0;
+	InitRes r0 = root_operation_ -> init(group_flag);
+	group_flag = 1;
+	InitRes r1 = root_operation_ -> init(group_flag);
 
-	bool group_flag = 1;
-	InitRes r = root_operation_ -> init(group_flag);
+	InitRes r;
+
+	if (r0.second == NULL || r1.second == NULL) {
+		group_flag = 1;
+		Layers::init(1, nei_);
+	  r = root_operation_ -> init(group_flag);
+	} else {
+		group_flag = Layers::get_my_layer();
+	  r = root_operation_ -> init(group_flag);
+	}
+
 	Types types = r.first;
-
 
   cerr << "Result type" << endl;
   for (int i = 0; i < types.size(); ++i) {

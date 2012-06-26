@@ -97,11 +97,10 @@ void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32*
 	}
 }
 
-// take all the columns and returns columns for which hashes will be computed 
-// (columns we will group by)
 void GroupSender::cast_to_hash_columns(const vector<void*> &data, vector<void*> &result) {
-	// TODO change this dummy implementation
-	result = data;
+	for(int i = 0; i < node_.group_by_column_size(); ++i) {
+		result.push_back(data[node_.group_by_column(i)]);
+	}
 }
 
 bool GroupSender::bucket_ready_to_send(int bucket) {
@@ -125,7 +124,7 @@ void GroupSender::send_bucket(int bucket_number){
 
 vector<void*> GroupSender::pull(int &rows) {
 
-	sleep(4);
+	sleep(4); // CO TO KURWA JEST?
 	
 	int nrows = 0;
 	vector<void*> data;
