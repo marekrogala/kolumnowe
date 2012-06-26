@@ -2,17 +2,22 @@
 #define ENGINE_OPERATION_H
 
 #include <vector>
+#include <utility>
+#include <algorithm>
 #include "operations.pb.h"
 #include "node_environment.h"
 
 using namespace std;
 
+
 namespace Engine {
+	  class Operation;
+		typedef pair<vector<OperationTree::ScanOperation_Type>, Operation*> InitRes;
+		typedef vector<OperationTree::ScanOperation_Type> Types;
     class Operation {
         public:
             virtual vector<void*> pull(int &rows) = 0;
-            virtual vector<OperationTree::ScanOperation_Type> init() = 0;
-            virtual void cutTree(int layerNumber) = 0;
+            virtual InitRes init(bool &group_flag) { } 
             virtual OperationTree::ScanOperation_Type get_source_type(int idx) {
             	assert(false);
             }

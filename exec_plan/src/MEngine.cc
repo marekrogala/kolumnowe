@@ -16,7 +16,10 @@ Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 void Engine::MEngine::run() {
 	cerr << "Started running query." << endl;
 
-	vector<OperationTree::ScanOperation_Type> types = root_operation_ -> init();
+	bool group_flag = Layers::get_my_layer();
+	InitRes r = root_operation_ -> init(group_flag);
+	Types types = r.first;
+
 
   cerr << "Result type" << endl;
   for (int i = 0; i < types.size(); ++i) {
@@ -27,7 +30,7 @@ void Engine::MEngine::run() {
 	int all_rows = 0;
 	BlockSerializer blockSerializer;
 
-	if (WhoGathers() == nei_ ->my_node_number()) {
+	if (0 == nei_ ->my_node_number()) {
 		DataSinkInterface * sink = nei_ -> OpenDataSink();
 
 		int ile = nei_ -> nodes_count() - 1;
@@ -51,17 +54,19 @@ void Engine::MEngine::run() {
 				switch (types[i]) {
 				case SINT:
 					sink -> ConsumeInts(i, rows, static_cast<int32*> (data[i]));
+							delete static_cast<int32*>(data[i]);
 					break;
 				case SDOUBLE:
 					sink -> ConsumeDoubles(i, rows,
 							static_cast<double*> (data[i]));
+							delete static_cast<double*>(data[i]);
 					break;
 				case SBOOL:
 					sink -> ConsumeByteBools(i, rows,
 							static_cast<bool*> (data[i]));
+							delete static_cast<bool*>(data[i]);
 					break;
 				}
-				delete data[i];
 			}
 
 		}
@@ -78,13 +83,13 @@ void Engine::MEngine::run() {
 			int rows = max_rows_;
 			vector<void*> data = root_operation_ -> pull(rows);
 			if (rows == 0) {
-				nei_ -> SendPacket(WhoGathers(), NULL, 0);
+				nei_ -> SendPacket(0, NULL, 0);
 				break;
 			}
 			char * buffer;
 			int bufferSize = blockSerializer.serializeBlock(types, data, rows,
 					&buffer);
-				nei_ -> SendPacket(WhoGathers(), buffer, bufferSize);
+				nei_ -> SendPacket(0, buffer, bufferSize);
 
 				delete buffer;
 

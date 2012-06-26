@@ -6,8 +6,9 @@
 
 namespace Engine {
 
-GroupReceiver::GroupReceiver(NodeEnvironmentInterface *nei, OperationTree::GroupByOperation &node) : 
-	Operation(nei), nei_(nei), node_(node) {
+GroupReceiver::GroupReceiver(NodeEnvironmentInterface *nei, 
+		std::vector<OperationTree::ScanOperation_Type> source_types) : 
+	Operation(nei), nei_(nei), source_types_(source_types) {
 	}
 
 std::vector<void*> GroupReceiver::pull(int &rows) {
@@ -17,7 +18,7 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 
 	std::cerr << "Receiving..." << std::endl;
 
-	int eofs_to_be_received = CountNodesInOtherLayer(nei_);
+	int eofs_to_be_received = Layers::count_nodes_in_other_layer();
 
 	do {
 	  data = nei_->ReadPacketBlocking(&data_len);
@@ -31,6 +32,8 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 	
 	BlockSerializer serializer;
 	rows = serializer.deserializeBlock(source_types_, data_len, data, buffers_);
+
+	// TODO - deallocate data block
 
 	return buffers_;
 }

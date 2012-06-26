@@ -44,15 +44,16 @@ struct HashFunction {
 
 
 
-GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, const OperationTree::GroupByOperation &node) : 
-	Operation(nei), nei_(nei), source_(source), node_(node) {
+GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, std::vector<OperationTree::ScanOperation_Type> source_types,
+		std::vector<OperationTree::ScanOperation_Type> hash_column_types,  const OperationTree::GroupByOperation &node
+) : 
+	Operation(nei), nei_(nei), source_(source), source_types_(source_types), hash_column_types_(hash_column_types), node_(node) {
 
 	}
 
 // dataToHash are columns that we should calculate hash for (not all the columns)
 int32* GroupSender::count_hashes(const vector<void*> &dataToHash, 
 		const vector<OperationTree::ScanOperation_Type> &typesToHash, int rows) {
-	// dummy implementation (hashes equal to 0) 	
 	
 	// temporary vector to count hashes for each column
 	vector<int32> columnHashValues = vector<int32>(dataToHash.size());
@@ -77,8 +78,8 @@ int32* GroupSender::count_hashes(const vector<void*> &dataToHash,
 void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32* hashes) {
 	for (int row = 0; row < rows; ++row) {
 
-		// calculate the number ofbucket
-		int bucket = hashes[row] % CountNodesInOtherLayer(nei_);
+		// calculate the number of bucket
+		int bucket = hashes[row] % Layers::count_nodes_in_other_layer();
 
 		// copy the data to the bucket
 		for (int column = 0, columns = data.size(); column < columns; ++columns)
@@ -114,8 +115,9 @@ void GroupSender::send_bucket(int bucket_number){
 				BlockSerializer serializer;
 				int message_len = serializer.serializeBlock(source_types_, buckets_[bucket_number], buckets_load_[bucket_number], &serializedData);
 
-				// send data
-				SendPacket(nei_, bucket_number, serializedData, message_len);
+				int who = Layers::get_real_node_number(1 - Layers::get_my_layer(), bucket_number);
+				// send datas
+				nei_ -> SendPacket(who, serializedData, message_len);
 
 				// reset this bucket
 				buckets_load_[bucket_number] = 0;
@@ -156,11 +158,6 @@ vector<void*> GroupSender::pull(int &rows) {
 	
 	// this is dummy return value
 	return std::vector<void*>();
-}
-
-std::vector<OperationTree::ScanOperation_Type> GroupSender::init() {
-
-	assert(false);
 }
 
 }

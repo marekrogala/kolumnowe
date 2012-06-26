@@ -17,6 +17,8 @@
 #include "UniversalHashmap.h"
 #include "debug.h"
 #include "RealUniversalHashmap.h"
+#include "GroupSender.h"
+#include "GroupReceiver.h"
 
 namespace Engine {
 
@@ -25,8 +27,7 @@ class GroupByOperation: public Engine::Operation {
 public:
 	GroupByOperation(NodeEnvironmentInterface * nei, const OperationTree::GroupByOperation & node, MemoryManager * mem_manager);
     vector<void*> pull(int &rows);
-    vector<OperationTree::ScanOperation_Type> init();
-
+		InitRes init(bool &group_flag);
 private:
             Operation * source_;
             vector<OperationTree::ScanOperation_Type> source_types_;
@@ -36,9 +37,11 @@ private:
             int32 * count_buffer_;
             vector<void*> res_;
             vector<OperationTree::ScanOperation_Type> res_types_;
+            vector<OperationTree::ScanOperation_Type> hash_signature_;
             int res_size_;
             bool first_time_;
             void first_pull();
+						void init_hashmap();
 };
 
 }

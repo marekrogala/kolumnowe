@@ -23,7 +23,7 @@ class FilterOperation: public Operation {
 	public:
 	   FilterOperation(NodeEnvironmentInterface * nei, const OperationTree::FilterOperation & node, MemoryManager * mem_manager);
 	            vector<void*> pull(int &rows);
-	            vector<OperationTree::ScanOperation_Type> init();
+							InitRes init(bool &group_flag) ;
 	            OperationTree::ScanOperation_Type get_source_type(int idx);
 	            void* get_data(int idx);
 	        private:

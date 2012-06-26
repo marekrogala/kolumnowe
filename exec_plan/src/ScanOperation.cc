@@ -1,16 +1,18 @@
 #include "ScanOperation.h"
 #include <iostream>
+#include "layers.h"
 #include "ExpressionNode.h"
 
 using namespace std;
 
 namespace Engine {
 
-vector<OperationTree::ScanOperation_Type> ScanOperation::init() {
+InitRes ScanOperation::init(bool &group_flag) {
     if (debug) cerr << "ScanOperation::init()" << endl;
 
-	int numberOfNodes = nei_ -> nodes_count();
-	for(int i = nei_ -> my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
+	int numberOfNodes = Layers::count_nodes_in_my_layer();
+
+	for(int i = Layers::get_my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
 		dataSources_.push_back(nei_->OpenDataSourceFile(i));
 	}
 	currentFile_ = dataSources_.begin();
@@ -20,7 +22,9 @@ vector<OperationTree::ScanOperation_Type> ScanOperation::init() {
         columns_.push_back(node_.column(i));
         types_.push_back(node_.type(i));
     }
-    return types_;
+
+		if (group_flag) return make_pair(types_, this);
+		else return make_pair(types_, static_cast<Operation*>(NULL));
 }
 
 vector<void*> ScanOperation::pull(int &rows) {
