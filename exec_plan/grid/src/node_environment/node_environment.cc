@@ -134,7 +134,7 @@ class NodeEnvironment : public NodeEnvironmentInterface {
   }
 
  private:
-  const static int kQueryId = 1;
+  const static int kQueryId = 4;
   uint32 node_number_;
   uint32 node_count_;
   boost::scoped_ptr<NetworkInput> input_;

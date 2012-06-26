@@ -113,7 +113,7 @@ class DoubleColumnServer : public ColumnServer {
 		  switch(query_id) {
 			  case 4:
 				  for(int i = 0; i < query_size; i++) {
-					  v.push_back(file_number+1);
+					  v.push_back((i*(file_number+1))%2 == 0 ? 1 : -1);
 				  }
 				  break;
 			  case 12:
@@ -164,7 +164,7 @@ class IntColumnServer : public ColumnServer {
 		  switch(query_id) {
 			  case 4:
 				  for(int i = 0; i < query_size; i++) {
-					  v.push_back(i);
+					  v.push_back(i*(file_number+1));
 				  }
 				  break;
 			  case 12:
@@ -233,7 +233,7 @@ class BoolColumnServer : public ColumnServer {
   BoolColumnServer(int query_id, int file_number, int column, int query_size)
       : ColumnServer(query_id, file_number, column, query_size), last(0) {
 		  switch(query_id) {
-			  case 6:
+			  case 8:
 				  for(int i = 0; i < query_size; i++) {
 					  v.push_back(file_number%2);
 				  }
