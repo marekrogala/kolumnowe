@@ -7,28 +7,48 @@
 
 Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 		const OperationTree::Operation &operation, int max_rows) :
-	nei_(nei), max_rows_(max_rows) {
-	root_operation_ = OperationBuilder::build(nei, operation,
-			new MemoryManager(max_rows));
-
-}
+	nei_(nei), max_rows_(max_rows), operation_(operation) {
+	}
 
 void Engine::MEngine::run() {
 	cerr << "Started running query." << endl;
 
-	bool group_flag = 0;
+	Layers::init(1, nei_);
+
+	bool group_flag = 1;
+
+	root_operation_ = OperationBuilder::build(nei_, operation_,
+			new MemoryManager(max_rows_));
+
 	InitRes r0 = root_operation_ -> init(group_flag);
-	group_flag = 1;
+
+	cout << "FDJFKLSDJLFJSLK"<<endl;
+	cout << flush;
+	group_flag = 0;
+
+	root_operation_ = OperationBuilder::build(nei_, operation_,
+			new MemoryManager(max_rows_));
+
+
 	InitRes r1 = root_operation_ -> init(group_flag);
 
+	cout << "DOOOOOOOOOOOOOOOOOOOONE " << endl;
+
 	InitRes r;
+	root_operation_ = OperationBuilder::build(nei_, operation_,
+			new MemoryManager(max_rows_));
 
 	if (r0.second == NULL || r1.second == NULL) {
+		cout << "KURWA na 1 "<< endl;
 		group_flag = 1;
 		Layers::init(1, nei_);
+
 	  r = root_operation_ -> init(group_flag);
 	} else {
+		cout << "KURWA na 2 "<< endl;
+		Layers::init(2, nei_);
 		group_flag = Layers::get_my_layer();
+		cerr << "My layer " << endl;
 	  r = root_operation_ -> init(group_flag);
 	}
 
@@ -88,7 +108,7 @@ void Engine::MEngine::run() {
 		
 		while (true) {
 			int rows = max_rows_;
-			vector<void*> data = root_operation_ -> pull(rows);
+			vector<void*> data = r.second -> pull(rows);
 			if (rows == 0) {
 				nei_ -> SendPacket(0, NULL, 0);
 				break;

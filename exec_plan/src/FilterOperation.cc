@@ -41,6 +41,7 @@ InitRes FilterOperation::init(bool &group_flag) {
 
     buffered_size_ = 0;
 		if (group_flag){
+			source_ = r.second;
 			return make_pair(source_types_, this);
 		} else return make_pair(source_types_, r.second);
 }

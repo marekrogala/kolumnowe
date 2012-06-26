@@ -14,13 +14,14 @@ class GroupReceiver : public Operation {
 		NodeEnvironmentInterface* nei_;
 		std::vector<OperationTree::ScanOperation_Type> source_types_;
 		int worker_id;
+		Operation *source_;
 		std::vector<void*>  buffers_;
 
 	public:
 		std::vector<void*> pull(int &rows);
 
 		GroupReceiver(NodeEnvironmentInterface *nei,
-		std::vector<OperationTree::ScanOperation_Type> source_types_);
+		std::vector<OperationTree::ScanOperation_Type> source_types_, Operation*source);
 
 		std::vector<OperationTree::ScanOperation_Type> init();
 };

@@ -46,7 +46,7 @@ InitRes GroupByOperation::init(bool &group_flag) {
 		group_flag = false;
 		return make_pair(res_types_, sender);
 	} else {
-		GroupReceiver *receiver = new GroupReceiver(nei_, source_types_);
+		GroupReceiver *receiver = new GroupReceiver(nei_, source_types_, r.second);
 		this -> source_ = receiver;
 		group_flag = true;
 		return make_pair(res_types_, this);

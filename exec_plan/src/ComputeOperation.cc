@@ -29,6 +29,7 @@ InitRes ComputeOperation::init(bool& group_flag) {
     }
 
 		if (group_flag) {
+			source_ = node;
 			return make_pair(res, this);
 		} else {
 			return make_pair(res, node);

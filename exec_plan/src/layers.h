@@ -22,6 +22,12 @@ class Layers {
 
 	public:
 		static void init(int layers, NodeEnvironmentInterface * nei) {
+			map_.clear();
+			map_inv_[0].clear();
+			map_inv_[1].clear();
+			t_[0].clear();
+			t_[1].clear();
+
 			node_number_ = nei -> my_node_number();
 			if (layers == 1) {
 				for(int i = 1; i < nei -> nodes_count(); ++i){

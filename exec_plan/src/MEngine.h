@@ -18,6 +18,7 @@ namespace Engine {
 
         private:
             NodeEnvironmentInterface * nei_;
+						const OperationTree::Operation &operation_;
             Operation * root_operation_;
             int max_rows_;
 			bool consume;
