@@ -16,7 +16,10 @@ Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 void Engine::MEngine::run() {
 	cerr << "Started running query." << endl;
 
-	bool group_flag = Layers::get_my_layer();
+	// ASSUME NO GROUP
+	Layers::init(1, nei_);
+
+	bool group_flag = 1;
 	InitRes r = root_operation_ -> init(group_flag);
 	Types types = r.first;
 
@@ -71,14 +74,8 @@ void Engine::MEngine::run() {
 
 		}
 	} else {
-	
-    /********
-    * cutTree(layerNumber) buduje:
-    * dla layerNumber = 0: polowe drzewa: bez skanow
-    * dla layerNumber = 1: polowe drzewa: ze scanami
-    **********/
-    //root_operation_ -> cutTree(GetMyLayer(nei_));    ////// ODKOMENTOWAC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  
+		// TYLKO SCAN
+		
 		while (true) {
 			int rows = max_rows_;
 			vector<void*> data = root_operation_ -> pull(rows);
