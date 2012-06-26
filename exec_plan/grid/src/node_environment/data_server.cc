@@ -118,7 +118,7 @@ class DoubleColumnServer : public ColumnServer {
 				  break;
 			  case 12:
 				  for(int i = 0 ; i < query_size; i++) {
-					  v.push_back(i*(query_size-i));
+					  v.push_back(5+i*(query_size-i));
 				  }
 				  break;
 			  default:
