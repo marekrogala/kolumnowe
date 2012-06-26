@@ -117,7 +117,7 @@ class NodeEnvironment : public NodeEnvironmentInterface {
   // -------- Reading input files and writing results --------------------------
 
   virtual DataSourceInterface* OpenDataSourceFile(int source_file_id) {
-    return new DataSource(CreateServer(kQueryId));
+    return new DataSource(CreateServer(source_file_id, kQueryId));
   };
 
   virtual DataSinkInterface* OpenDataSink() {
