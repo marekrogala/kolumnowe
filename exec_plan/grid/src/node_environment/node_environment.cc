@@ -134,7 +134,7 @@ class NodeEnvironment : public NodeEnvironmentInterface {
   }
 
  private:
-  const static int kQueryId = 4;
+  const static int kQueryId = 8;
   uint32 node_number_;
   uint32 node_count_;
   boost::scoped_ptr<NetworkInput> input_;
@@ -149,6 +149,7 @@ NodeEnvironmentInterface* CreateNodeEnvironment(int argc, char** argv) {
   std::auto_ptr<NetworkInput> network_input(new NetworkInput());
   uint16_t listening_port = network_input->port();
   LOG1("Running node on port: %d", listening_port);
+  fflush(stdout);
 
   boost::asio::io_service io_service;
   boost::scoped_ptr<tcp::socket> socket(
