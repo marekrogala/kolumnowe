@@ -24,11 +24,12 @@ FilterOperation::FilterOperation(NodeEnvironmentInterface * nei, const Operation
 		Operation(nei), node_(node), mem_manager_(mem_manager) {
 }
 
-vector<OperationTree::ScanOperation_Type> FilterOperation::init() {
+InitRes FilterOperation::init(bool &group_flag) {
 	if (debug) cerr << "FilterOperation::init()" << endl;
 
     source_ = OperationBuilder::build(nei_, node_.source(), mem_manager_);
-    source_types_ = source_ -> init();
+    InitRes r = source_ -> init(group_flag);
+		source_types_ = r.first;
 
     for(int i = 0; i < source_types_.size(); ++i) {
     	buffered_.push_back(mem_manager_ -> allocate_normal());
@@ -39,7 +40,10 @@ vector<OperationTree::ScanOperation_Type> FilterOperation::init() {
     expr_ -> init();
 
     buffered_size_ = 0;
-    return source_types_;
+		if (group_flag){
+			source_ = r.second;
+			return make_pair(source_types_, this);
+		} else return make_pair(source_types_, r.second);
 }
 
 vector<void*> FilterOperation::pull(int &rows) {

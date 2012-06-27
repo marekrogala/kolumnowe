@@ -8,7 +8,7 @@ BOOST_THREAD_LIB = -lboost_thread
 CCFLAGS = -O7 -std=c++0x
 CXXFLAGS   =  ../grid/src/node_environment/libnode_environment.a ../grid/src/utils/libutils.a ../grid/src/netio/libnetio.a ../grid/src/grid_server/proto/grid_server.pb.o $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(BOOST_CPPFLAGS) -lprotobuf $(OPTIONS)
 
-FILES = ComputeOperation.o ExpressionNode.o FilterOperation.o MemoryManager.o MEngine.o  Operation.h ScanOperation.o GroupByOperation.o OperationBuilder.o UniversalHashmap.h engine.o RealUniversalHashmap.o BlockSerializer.o operations.pb.o
+FILES = ComputeOperation.o ExpressionNode.o FilterOperation.o MemoryManager.o MEngine.o  Operation.h ScanOperation.o GroupByOperation.o OperationBuilder.o UniversalHashmap.h engine.o RealUniversalHashmap.o BlockSerializer.o operations.pb.o layers.o GroupSender.o GroupReceiver.o
 
 all: $(PROGNAME)
 

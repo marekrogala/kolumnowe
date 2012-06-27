@@ -42,17 +42,25 @@ struct HashFunction {
 	}
 };
 
+static const int bucket_size = 2000;
 
-
-GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, const OperationTree::GroupByOperation &node) : 
-	Operation(nei), nei_(nei), source_(source), node_(node) {
-
+GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, std::vector<OperationTree::ScanOperation_Type> source_types,
+		std::vector<OperationTree::ScanOperation_Type> hash_column_types,  const OperationTree::GroupByOperation &node
+) : 
+	Operation(nei), nei_(nei), source_(source), source_types_(source_types), hash_column_types_(hash_column_types), node_(node) {
+		buckets_ = std::vector<std::vector<void*> >(Layers::count_nodes_in_other_layer());
+		buckets_load_ = std::vector<int>(Layers::count_nodes_in_other_layer());
+		for (int i = 0; i < Layers::count_nodes_in_other_layer();	++i) {
+			buckets_[i] = std::vector<void*>(source_types.size());
+			for (int j = 0; j <source_types.size(); ++j)
+				buckets_[i][j] = malloc(bucket_size * sizeof(double));
+		}
+		
 	}
 
 // dataToHash are columns that we should calculate hash for (not all the columns)
 int32* GroupSender::count_hashes(const vector<void*> &dataToHash, 
 		const vector<OperationTree::ScanOperation_Type> &typesToHash, int rows) {
-	// dummy implementation (hashes equal to 0) 	
 	
 	// temporary vector to count hashes for each column
 	vector<int32> columnHashValues = vector<int32>(dataToHash.size());
@@ -77,30 +85,29 @@ int32* GroupSender::count_hashes(const vector<void*> &dataToHash,
 void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32* hashes) {
 	for (int row = 0; row < rows; ++row) {
 
-		// calculate the number ofbucket
-		int bucket = hashes[row] % CountNodesInOtherLayer(nei_);
+		// calculate the number of bucket
+		int bucket = hashes[row] % Layers::count_nodes_in_other_layer();
 
 		// copy the data to the bucket
-		for (int column = 0, columns = data.size(); column < columns; ++columns)
-			switch (source_types_[columns]) {
+		for (int column = 0, columns = data.size(); column < columns; ++column)
+			switch (source_types_[column]) {
 				case OperationTree::ScanOperation_Type_INT:
-					std::fill_n( (int*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((int*) data[columns] + row));
+					std::fill_n( (int*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((int*) data[column] + row));
 					break;
 				case OperationTree::ScanOperation_Type_DOUBLE:
-					std::fill_n( (double*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((double*) data[columns] + row));
+					std::fill_n( (double*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((double*) data[column] + row));
 				case OperationTree::ScanOperation_Type_BOOL:
-					std::fill_n( (bool*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((bool*) data[columns] + row));
+					std::fill_n( (bool*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((bool*) data[column] + row));
 			}
 
 		buckets_load_[bucket]++;
 	}
 }
 
-// take all the columns and returns columns for which hashes will be computed 
-// (columns we will group by)
 void GroupSender::cast_to_hash_columns(const vector<void*> &data, vector<void*> &result) {
-	// TODO change this dummy implementation
-	result = data;
+	for(int i = 0; i < node_.group_by_column_size(); ++i) {
+		result.push_back(data[node_.group_by_column(i)]);
+	}
 }
 
 bool GroupSender::bucket_ready_to_send(int bucket) {
@@ -114,31 +121,37 @@ void GroupSender::send_bucket(int bucket_number){
 				BlockSerializer serializer;
 				int message_len = serializer.serializeBlock(source_types_, buckets_[bucket_number], buckets_load_[bucket_number], &serializedData);
 
-				// send data
-				SendPacket(nei_, bucket_number, serializedData, message_len);
+				int who = Layers::get_real_node_number(1 - Layers::get_my_layer(), bucket_number);
+				// send datas
+				cerr << "Send bucket to "<<who << endl;
+				nei_ -> SendPacket(who, serializedData, message_len);
 
 				// reset this bucket
 				buckets_load_[bucket_number] = 0;
 }
 
 vector<void*> GroupSender::pull(int &rows) {
-
-	sleep(4);
-	
+	cerr << "GroupSender::pull " <<rows << endl;
 	int nrows = 0;
 	vector<void*> data;
 
 	do {
 		data = source_->pull(rows);
+		cerr << "1 GROUPSENDER ASFSDFSDFSD\n";
 
 		// cast columns to columns for which we computw hashes
 		vector<void*> hashed_columns_data;
+
 		cast_to_hash_columns(data, hashed_columns_data);
+		cerr << "2 GROUPSENDER ASFSDFSDFSD\n";
 	
 		int32* hashes = count_hashes(hashed_columns_data, hash_column_types_, rows);
+		cerr << "3 GROUPSENDER ASFSDFSDFSD\n";
 
 		scatter_data_into_buckets(data, rows, hashes);
+		cerr << "4 GROUPSENDER ASFSDFSDFSD\n";
 
+		cerr << "GROUPSENDER ASFSDFSDFSD\n";
 		for(int i = 0, buckets_no = buckets_.size(); i < buckets_no; ++i)
 			if (bucket_ready_to_send(i)) {
 				send_bucket(i);
@@ -156,11 +169,6 @@ vector<void*> GroupSender::pull(int &rows) {
 	
 	// this is dummy return value
 	return std::vector<void*>();
-}
-
-std::vector<OperationTree::ScanOperation_Type> GroupSender::init() {
-
-	assert(false);
 }
 
 }

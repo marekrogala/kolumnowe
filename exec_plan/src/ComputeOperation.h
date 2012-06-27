@@ -14,8 +14,8 @@ namespace Engine {
         public:
             ComputeOperation(NodeEnvironmentInterface * nei, const OperationTree::ComputeOperation & node, MemoryManager * mem_manager);
             vector<void*> pull(int &rows);
-            vector<OperationTree::ScanOperation_Type> init();
             OperationTree::ScanOperation_Type get_source_type(int idx);
+						InitRes init(bool& group_flag);
             void* get_data(int idx);
         private:
             vector<void*> data_;

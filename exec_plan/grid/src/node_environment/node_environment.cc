@@ -117,7 +117,7 @@ class NodeEnvironment : public NodeEnvironmentInterface {
   // -------- Reading input files and writing results --------------------------
 
   virtual DataSourceInterface* OpenDataSourceFile(int source_file_id) {
-    return new DataSource(CreateServer(kQueryId));
+    return new DataSource(CreateServer(source_file_id, kQueryId));
   };
 
   virtual DataSinkInterface* OpenDataSink() {
@@ -134,7 +134,7 @@ class NodeEnvironment : public NodeEnvironmentInterface {
   }
 
  private:
-  const static int kQueryId = 1;
+  const static int kQueryId = 4;
   uint32 node_number_;
   uint32 node_count_;
   boost::scoped_ptr<NetworkInput> input_;

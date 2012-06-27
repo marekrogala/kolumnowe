@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
 
       int query_no = 1;
       //int max_rows = atoi(argv[3]); // TODO remove this shit before submitting
-      int max_rows = 2000000;
+      int max_rows = 2;
 
 
       NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);

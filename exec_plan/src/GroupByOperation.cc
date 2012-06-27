@@ -28,17 +28,33 @@ GroupByOperation::GroupByOperation(NodeEnvironmentInterface * nei, const Operati
 		Operation(nei), node_(node), mem_manager_(mem_manager), first_time_(true) {
 }
 
-vector<OperationTree::ScanOperation_Type> GroupByOperation::init() {
+InitRes GroupByOperation::init(bool &group_flag) {
 	source_ = OperationBuilder::build(nei_, node_.source(), mem_manager_);
+	InitRes r = source_ -> init(group_flag);
+	source_types_ = r.first;
 
-	source_types_ = source_ -> init();
 
 	count_buffer_ = static_cast<int32*>(mem_manager_ -> allocate_normal());
 	int max_rows = mem_manager_ -> max_rows();
 	for(int i = 0; i < max_rows; ++i) { count_buffer_[i] = 1; }
-
 	map_ = NULL;
+	init_hashmap();
 
+
+	if (group_flag){
+		GroupSender *sender = new GroupSender(nei_, source_, source_types_, hash_signature_, node_);
+		group_flag = false;
+		return make_pair(res_types_, sender);
+	} else {
+		GroupReceiver *receiver = new GroupReceiver(nei_, source_types_, r.second);
+		this -> source_ = receiver;
+		group_flag = true;
+		return make_pair(res_types_, this);
+	}
+
+}
+
+void GroupByOperation::init_hashmap() {
 	if (node_.group_by_column_size() == 2 && node_.aggregations_size() == 1) {
 		OperationTree::ScanOperation_Type gtype1 = source_types_[node_.group_by_column(0)];
 		OperationTree::ScanOperation_Type gtype2 = source_types_[node_.group_by_column(0)];
@@ -102,6 +118,8 @@ vector<OperationTree::ScanOperation_Type> GroupByOperation::init() {
 		hash_signature.push_back(source_types_[node_.group_by_column(i)]);
 	}
 
+	hash_signature_ = hash_signature;
+
 	for(int i = 0; i < node_.aggregations_size(); ++i) {
 		if (node_.aggregations(i).type() == OperationTree::Aggregation_Type_COUNT) res_types_.push_back(SINT);
 		else res_types_.push_back(source_types_[node_.aggregations(i).aggregated_column()]);
@@ -117,8 +135,6 @@ vector<OperationTree::ScanOperation_Type> GroupByOperation::init() {
 		} cerr << endl;
 		map_ = new RealUniversalHashmap(hash_signature, value_signature);
 	}
-
-	return res_types_;
 }
 
 void GroupByOperation::first_pull() {

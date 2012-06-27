@@ -16,8 +16,7 @@ namespace Engine {
         public:
             ScanOperation(NodeEnvironmentInterface* nei, const OperationTree::ScanOperation &node, MemoryManager * mem_manager_);
             vector<void*> pull(int &rows);
-            vector<OperationTree::ScanOperation_Type> init();
-
+						InitRes init(bool &group_flag);
         private:
             void init_buffers();
             void free_buffers();

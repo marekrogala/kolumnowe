@@ -11,6 +11,8 @@
 #include <vector>
 #include <utility>
 
+#include <iostream>
+
 using ::std::min;
 using ::std::vector;
 
@@ -40,7 +42,7 @@ double normal() {
 // A class serving data from a single column.
 class ColumnServer {
  public:
-  ColumnServer(int query_size) : rows_left_(query_size) {}
+  ColumnServer(int query_id, int file_number, int column, int query_size) : rows_left_(query_size), query_id(query_id), file_number(file_number), column(column), query_size(query_size) {}
   virtual ~ColumnServer() {};
 
   virtual int GetDoubles(int number, double* destination) {
@@ -62,6 +64,10 @@ class ColumnServer {
   }
 
  protected:
+  int query_id;
+  int file_number;
+  int column;
+  int query_size;
   int Serve(int N) {
     if (N >= rows_left_) {
       N = rows_left_;
@@ -80,7 +86,7 @@ class RealDataServer : public Server {
   // contain types of columns - if column_types[i] = j, then the i-th
   // (0-indexed) column of the input is of type j (where 1 means int, 2 means
   // double and 3 means bool).
-  RealDataServer(const vector<int> &column_types);
+  RealDataServer(int query_id, int file_number, const vector<int> &column_types);
   ~RealDataServer();
   int GetDoubles(int column_index, int number, double* destination);
   int GetInts(int column_index, int number, int32* destination);
@@ -97,127 +103,195 @@ class RealDataServer : public Server {
 
  private:
   vector<ColumnServer *> column_servers_;
+  int query_id;
 };
 
 class DoubleColumnServer : public ColumnServer {
  public:
-  DoubleColumnServer(int query_size)
-      : ColumnServer(query_size),
-        low_range_(random_power_of_two() % (1 << 30)),
-        high_range_(low_range_ + random_power_of_two() % (1 << 30)),
-        zoom_range_(random_power_of_two()),
-        normal_(random(0, 1)) {
+  DoubleColumnServer(int query_id, int file_number, int column, int query_size)
+      : ColumnServer(query_id, file_number, column, query_size), last(0) {
+		  switch(query_id) {
+			  case 4:
+				  for(int i = 0; i < query_size; i++) {
+					  v.push_back((i*(file_number+1))%2 == 0 ? 1 : -1);
+				  }
+				  break;
+			  case 12:
+				  for(int i = 0 ; i < query_size; i++) {
+					  v.push_back(5+i*(query_size-i));
+				  }
+				  break;
+			  default:
+				  for(int i = 0; i < query_size; i++) {
+					  v.push_back(i*(file_number+1));
+				  }
+				  break;
+		  }
   }
 
   int GetDoubles(int number, double *destination) {
-    printf("SERVING %d to %d, zoom %d, normalcy %s\n",
-           low_range_, high_range_, zoom_range_, normal_ ? "TRUE" : "FALSE");
-    number = Serve(number);
-    for (int i = 0; i < number; ++i) {
-      destination[i] = Generate();
-    }
-    return number;
+	  number = number > query_size-last ? query_size-last : number;
+	  for(int i = 0; i < number; i++, last++) {
+		  destination[i] = v[last];
+	  }
+	  return number;
   }
 
  private:
-  double Generate() {
-    if (!normal_) {
-      return (double) random(low_range_, high_range_) /
-             (double) random(1, zoom_range_);
-    } else {
-      return (low_range_ + high_range_) / 2. +
-             normal() * (high_range_ - low_range_) / (2. * zoom_range_);
-    }
-  }
-
-  const int low_range_;
-  const int high_range_;
-  const int zoom_range_;
-  const bool normal_;
+	  vector<double> v;
+	  int last;
+//  double Generate() {
+//    if (!normal_) {
+//      return (double) random(low_range_, high_range_) /
+//             (double) random(1, zoom_range_);
+//    } else {
+//      return (low_range_ + high_range_) / 2. +
+//             normal() * (high_range_ - low_range_) / (2. * zoom_range_);
+//    }
+//  }
+//
+//  const int low_range_;
+//  const int high_range_;
+//  const int zoom_range_;
+//  const bool normal_;
 };
 
 // Column Server implementations.
 class IntColumnServer : public ColumnServer {
  public:
-  IntColumnServer(int query_size)
-      : ColumnServer(query_size),
-        low_range_(random_power_of_two() % (1 << 30)),
-        high_range_(low_range_ + min(random_power_of_two(), 1 << 30)),
-        normal_(random(0, 1)) {
+  IntColumnServer(int query_id, int file_number, int column, int query_size)
+      : ColumnServer(query_id, file_number, column, query_size), last(0) {
+		  switch(query_id) {
+			  case 4:
+				  for(int i = 0; i < query_size; i++) {
+					  v.push_back(i*(file_number+1));
+				  }
+				  break;
+			  case 12:
+				  if(column == 0) {
+					  for(int i = 0 ; i < query_size; i++) {
+						  v.push_back(i);
+					  }
+				  }
+				  else {
+					  if(file_number <= 2) {
+						  for(int i = 0 ; i < query_size; i++) {
+							  v.push_back(query_size-i);
+						  }
+					  }
+					  else {
+						  for(int i = 0 ; i < query_size; i++) {
+							  v.push_back(i-query_size);
+						  }
+					  }
+				  }
+				  break;
+			  default:
+				  for(int i = 0; i < query_size; i++) {
+					  v.push_back(i*(file_number+1));
+				  }
+				  break;
+		  }
+	//	  std::cout << "INTCOLUMNSERVER\n";
   }
 
   int GetInts(int number, int *destination) {
-    printf("SERVING %d to %d, normalcy %s\n",
-           low_range_, high_range_, normal_ ? "TRUE" : "FALSE");
-    number = Serve(number);
-    for (int i = 0; i < number; ++i) {
-      destination[i] = Generate();
-    }
-    return number;
+	  number = number > query_size-last ? query_size-last : number;
+	  for(int i = 0; i < number; i++, last++) {
+		  destination[i] = v[last];
+	  }
+	  return number;
+	  
+  //  printf("SERVING %d to %d, normalcy %s\n",
+  //         low_range_, high_range_, normal_ ? "TRUE" : "FALSE");
+  //  number = Serve(number);
+  //  for (int i = 0; i < number; ++i) {
+  //    destination[i] = Generate();
+  //  }
+  //  return number;
   }
 
  private:
-  double Generate() {
-    if (!normal_) {
-      return random(low_range_, high_range_);
-    } else {
-      return (low_range_ + high_range_) / 2. +
-             normal() * (high_range_ - low_range_) / 2.;
-    }
-  }
-
-  const int low_range_;
-  const int high_range_;
-  const bool normal_;
+	  vector<int32> v;
+	  int last;
+//  double Generate() {
+//    if (!normal_) {
+//      return random(low_range_, high_range_);
+//    } else {
+//      return (low_range_ + high_range_) / 2. +
+//             normal() * (high_range_ - low_range_) / 2.;
+//    }
+//  }
+//
+//  const int low_range_;
+//  const int high_range_;
+//  const bool normal_;
 };
 
 class BoolColumnServer : public ColumnServer {
  public:
-  BoolColumnServer(int query_size)
-      : ColumnServer(query_size),
-        probability_(random(0, 100)) {
+  BoolColumnServer(int query_id, int file_number, int column, int query_size)
+      : ColumnServer(query_id, file_number, column, query_size), last(0) {
+		  switch(query_id) {
+			  case 8:
+				  for(int i = 0; i < query_size; i++) {
+					  v.push_back(file_number%2);
+				  }
+				  break;
+			  default:
+				  for(int i = 0; i < query_size; i++) {
+					  v.push_back((i*(file_number+1))%2);
+				  }
+				  break;
+		  }
+
   }
 
   int GetByteBools(int number, bool *destination) {
-    printf("SERVING probability %d\n", probability_);
-    number = Serve(number);
-    for (int i = 0; i < number; ++i) {
-      destination[i] = Generate();
-    }
-    return number;
+	  number = number > query_size-last ? query_size-last : number;
+	  for(int i = 0; i < number; i++, last++) {
+		  destination[i] = v[last];
+	  }
+	  return number;
   }
 
   virtual int GetBitBools(int number, char* destination) {
-    printf("SERVING probability %d\n", probability_);
-    number = Serve(number);
-    for (int i = 0; i < number; ++i) {
-      destination[i / 8] |= (Generate() << (i & 7));
-    }
-    return number;
-  }
+	  return 0;
+  //  printf("SERVING probability %d\n", probability_);
+  //  number = Serve(number);
+  //  for (int i = 0; i < number; ++i) {
+  //    destination[i / 8] |= (Generate() << (i & 7));
+  //  }
+  //  return number;
+ }
 
  private:
-  char Generate() {
-    return (random(0, 99) < probability_);
-  }
-
-  const int probability_;
+	  vector<bool> v;
+	  int last;
+//  char Generate() {
+//    return (random(0, 99) < probability_);
+//  }
+//
+//  const int probability_;
 };
 
 // RealDataServer implementation.
-RealDataServer::RealDataServer(const vector<int> &column_types) {
-  int query_size = random(1000000, 10000000);
+RealDataServer::RealDataServer(int query_id, int file_number, const vector<int> &column_types) {
+//  int query_size = random(1000000, 10000000);
+	int query_size = 5;
   vector<int>::const_iterator it;
+  int i = 0;
   for (it = column_types.begin(); it != column_types.end(); ++it) {
     switch(*it) {
-      case 1: column_servers_.push_back(new IntColumnServer(query_size));
+      case 1: column_servers_.push_back(new IntColumnServer(query_id, file_number, i, query_size));
               break;
-      case 2: column_servers_.push_back(new DoubleColumnServer(query_size));
+      case 2: column_servers_.push_back(new DoubleColumnServer(query_id, file_number, i, query_size));
               break;
-      case 3: column_servers_.push_back(new BoolColumnServer(query_size));
+      case 3: column_servers_.push_back(new BoolColumnServer(query_id, file_number, i, query_size));
               break;
       default: assert(false); break;
     }
+	i++;
   }
 }
 
@@ -253,7 +327,7 @@ void RealDataServer::ConsumeDoubles(int column_index, int number,
 
 void RealDataServer::ConsumeInts(int column_index, int number, const int32* d) {
   for (int i = 0; i < number; ++i) {
-    printf("C%d: %d\n", column_index, d[i]);
+    printf("CC%d: %d\n", column_index, d[i]);
   }
 }
 
@@ -326,6 +400,10 @@ vector<int> ColumnMap(int query_id) {
   }
 }
 
+Server *CreateServer(int file_number, int query_id) {
+  return new RealDataServer(query_id, file_number, ColumnMap(query_id));
+}
+
 Server *CreateServer(int query_id) {
-  return new RealDataServer(ColumnMap(query_id));
+  return new RealDataServer(query_id, 0, ColumnMap(query_id));
 }

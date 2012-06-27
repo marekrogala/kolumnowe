@@ -18,10 +18,8 @@ class GroupSender : public Operation {
 		Operation *source_;
 		std::vector<OperationTree::ScanOperation_Type> source_types_;
 		std::vector<OperationTree::ScanOperation_Type> hash_column_types_;
+    const OperationTree::GroupByOperation &node_;
 		
-		// node of the original tree corresponding
-		const OperationTree::GroupByOperation & node_;
-
 		// we use hash function to scatter data into buckets
 		// when there is enough rows in a bucket, data is sent to 
 		// corresponding worker in second group
@@ -36,11 +34,11 @@ class GroupSender : public Operation {
 
 
 	public:
-		GroupSender(NodeEnvironmentInterface *nei, Operation *source, const OperationTree::GroupByOperation &node);
+		GroupSender(NodeEnvironmentInterface *nei, Operation *source, std::vector<OperationTree::ScanOperation_Type> source_types, std::vector<OperationTree::ScanOperation_Type> hash_column_types, const OperationTree::GroupByOperation &node);
+		
+
 
 		std::vector<void*> pull(int &rows);
-
-		std::vector<OperationTree::ScanOperation_Type> init();
 };
 
 }

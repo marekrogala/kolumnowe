@@ -11,7 +11,7 @@
 #ifdef DEBUG
 const bool debug = true;
 #else
-const bool debug = false;
+const bool debug = true;
 #endif
 
 #endif /* DEBUG_H_ */

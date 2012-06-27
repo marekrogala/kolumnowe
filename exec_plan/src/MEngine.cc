@@ -7,16 +7,52 @@
 
 Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 		const OperationTree::Operation &operation, int max_rows) :
-	nei_(nei), max_rows_(max_rows) {
-	root_operation_ = OperationBuilder::build(nei, operation,
-			new MemoryManager(max_rows));
-
-}
+	nei_(nei), max_rows_(max_rows), operation_(operation) {
+	}
 
 void Engine::MEngine::run() {
 	cerr << "Started running query." << endl;
 
-	vector<OperationTree::ScanOperation_Type> types = root_operation_ -> init();
+	Layers::init(1, nei_);
+
+	bool group_flag = 1;
+
+	root_operation_ = OperationBuilder::build(nei_, operation_,
+			new MemoryManager(max_rows_));
+
+	InitRes r0 = root_operation_ -> init(group_flag);
+
+	cout << "FDJFKLSDJLFJSLK"<<endl;
+	cout << flush;
+	group_flag = 0;
+
+	root_operation_ = OperationBuilder::build(nei_, operation_,
+			new MemoryManager(max_rows_));
+
+
+	InitRes r1 = root_operation_ -> init(group_flag);
+
+	cout << "DOOOOOOOOOOOOOOOOOOOONE " << endl;
+
+	InitRes r;
+	root_operation_ = OperationBuilder::build(nei_, operation_,
+			new MemoryManager(max_rows_));
+
+	if (r0.second == NULL || r1.second == NULL) {
+		cout << "KURWA na 1 "<< endl;
+		group_flag = 1;
+		Layers::init(1, nei_);
+
+	  r = root_operation_ -> init(group_flag);
+	} else {
+		cout << "KURWA na 2 "<< endl;
+		Layers::init(2, nei_);
+		group_flag = Layers::get_my_layer();
+		cerr << "My layer " << endl;
+	  r = root_operation_ -> init(group_flag);
+	}
+
+	Types types = r.first;
 
   cerr << "Result type" << endl;
   for (int i = 0; i < types.size(); ++i) {
@@ -27,7 +63,7 @@ void Engine::MEngine::run() {
 	int all_rows = 0;
 	BlockSerializer blockSerializer;
 
-	if (WhoGathers() == nei_ ->my_node_number()) {
+	if (0 == nei_ ->my_node_number()) {
 		DataSinkInterface * sink = nei_ -> OpenDataSink();
 
 		int ile = nei_ -> nodes_count() - 1;
@@ -51,40 +87,36 @@ void Engine::MEngine::run() {
 				switch (types[i]) {
 				case SINT:
 					sink -> ConsumeInts(i, rows, static_cast<int32*> (data[i]));
+							delete static_cast<int32*>(data[i]);
 					break;
 				case SDOUBLE:
 					sink -> ConsumeDoubles(i, rows,
 							static_cast<double*> (data[i]));
+							delete static_cast<double*>(data[i]);
 					break;
 				case SBOOL:
 					sink -> ConsumeByteBools(i, rows,
 							static_cast<bool*> (data[i]));
+							delete static_cast<bool*>(data[i]);
 					break;
 				}
-				delete data[i];
 			}
 
 		}
 	} else {
-	
-    /********
-    * cutTree(layerNumber) buduje:
-    * dla layerNumber = 0: polowe drzewa: bez skanow
-    * dla layerNumber = 1: polowe drzewa: ze scanami
-    **********/
-    //root_operation_ -> cutTree(GetMyLayer(nei_));    ////// ODKOMENTOWAC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  
+		// TYLKO SCAN
+		
 		while (true) {
 			int rows = max_rows_;
-			vector<void*> data = root_operation_ -> pull(rows);
+			vector<void*> data = r.second -> pull(rows);
 			if (rows == 0) {
-				nei_ -> SendPacket(WhoGathers(), NULL, 0);
+				nei_ -> SendPacket(0, NULL, 0);
 				break;
 			}
 			char * buffer;
 			int bufferSize = blockSerializer.serializeBlock(types, data, rows,
 					&buffer);
-				nei_ -> SendPacket(WhoGathers(), buffer, bufferSize);
+				nei_ -> SendPacket(0, buffer, bufferSize);
 
 				delete buffer;
 

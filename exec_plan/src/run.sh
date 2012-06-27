@@ -8,21 +8,10 @@ COUNT=$1
 
 MAX_NUMBER=`expr $COUNT - 1`
 
-HOSTS="";
-
-for i in `seq 0 $MAX_NUMBER`; do 
-   PORT=`expr $START_PORT + $i`
-   HOSTS="$HOSTS localhost:$PORT" 
-done 
-
-PIDS=""
-
 for i in `seq 0 $MAX_NUMBER`; do
    PORT=`expr $START_PORT + $i`
   if [ "$i" == "$MAX_NUMBER" ]; then sleep 3; fi;
-  echo "RUNNING:./net_tester $i $PORT $HOSTS &"
-  ./net_tester $i $PORT $HOSTS  & 
-  PIDS="$PIDS $!"
+  ./exec_plan localhost:2000 &
 done
 
 echo $PIDS
