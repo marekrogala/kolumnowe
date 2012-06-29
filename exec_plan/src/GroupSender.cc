@@ -96,8 +96,10 @@ void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32*
 					break;
 				case OperationTree::ScanOperation_Type_DOUBLE:
 					std::fill_n( (double*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((double*) data[column] + row));
+					break;
 				case OperationTree::ScanOperation_Type_BOOL:
 					std::fill_n( (bool*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((bool*) data[column] + row));
+					break;
 			}
 
 		buckets_load_[bucket]++;
@@ -119,7 +121,17 @@ void GroupSender::send_bucket(int bucket_number){
 				// serialize data
 				char* serializedData;
 				BlockSerializer serializer;
+				cerr << "BEFORE SERIALIZATION: \n";
+				printCols(source_types_, buckets_[bucket_number], buckets_load_[bucket_number]);
 				int message_len = serializer.serializeBlock(source_types_, buckets_[bucket_number], buckets_load_[bucket_number], &serializedData);
+				// ...
+				cerr << "AFTER DESRIALIZATION: \n";
+				vector<void*> bufs;
+				int rows = serializer.deserializeBlock(source_types_, message_len, serializedData, bufs);
+				printCols(source_types_, bufs, rows);
+				cerr << "END\n";
+
+				// ...
 
 				int who = Layers::get_real_node_number(1 - Layers::get_my_layer(), bucket_number);
 				// send datas
@@ -137,6 +149,26 @@ vector<void*> GroupSender::pull(int &rows) {
 
 	do {
 		data = source_->pull(rows);
+
+		cerr << "SCOLS: " << source_types_.size() << "COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
+		for(int row = 0; row < rows; row++){
+			for (int column = 0, columns = data.size(); column < columns; ++column) {
+				cerr << "ROW: ";
+				switch (source_types_[column]) {
+					case OperationTree::ScanOperation_Type_INT:
+						cerr << * ((int*) data[column] + row) <<" ";
+						break;
+					case OperationTree::ScanOperation_Type_DOUBLE:
+						cerr << * ((double*) data[column] + row) <<" ";
+						break;
+					case OperationTree::ScanOperation_Type_BOOL:
+						cerr <<  * ((bool*) data[column] + row) <<" ";
+						break;
+					}
+			}
+			cerr << endl; 
+	}
+
 		cerr << "1 GROUPSENDER ASFSDFSDFSD\n";
 
 		// cast columns to columns for which we computw hashes

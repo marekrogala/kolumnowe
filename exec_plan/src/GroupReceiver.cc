@@ -35,6 +35,25 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 	
 	BlockSerializer serializer;
 	rows = serializer.deserializeBlock(source_types_, data_len, data, buffers_);
+	cerr << "RECIVED: \n";
+	printCols(source_types_, buffers_, rows);
+	cerr << "END\n";
+//		//cerr << "SCOLS: " << source_types_.size() << "COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
+//		for(int row = 0; row < rows; row++){
+//			for (int column = 0, columns = buffers_.size(); column < columns; ++column) {
+//				cerr << "REC ROW: ";
+//				switch (source_types_[column]) {
+//					case OperationTree::ScanOperation_Type_INT:
+//						cerr << * ((int*) buffers_[column] + row) <<" ";
+//						break;
+//					case OperationTree::ScanOperation_Type_DOUBLE:
+//						cerr << * ((double*) buffers_[column] + row) <<" ";
+//					case OperationTree::ScanOperation_Type_BOOL:
+//						cerr <<  * ((bool*) buffers_[column] + row) <<" ";
+//					}
+//			}
+//			cerr << endl; 
+//	}
 
 	// TODO - deallocate data block
 

@@ -114,6 +114,9 @@ void Engine::MEngine::run() {
 				break;
 			}
 			char * buffer;
+			cerr << "SENDING TO 0: \n";
+			printCols(types, data, rows);
+			cerr << "END\n";
 			int bufferSize = blockSerializer.serializeBlock(types, data, rows,
 					&buffer);
 				nei_ -> SendPacket(0, buffer, bufferSize);
@@ -132,6 +135,8 @@ void Engine::MEngine::run() {
 		cerr << "=============================" << endl;
 		cerr << "Worker " << nei_ -> my_node_number() << " Consumed " << all_rows << " rows " << endl;
 		cerr << "Completed query." << endl;
+		cerr << flush;
+		cout << flush;
 
 }
 

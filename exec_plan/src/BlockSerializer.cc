@@ -13,6 +13,28 @@ using namespace std;
 
 namespace Engine {
 
+
+void printCols(vector<OperationTree::ScanOperation_Type> types, vector<void*> data, int rows) {
+	cerr << "SCOLS: " << types.size() << " COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
+	for(int row = 0; row < rows; row++){
+		for (int column = 0, columns = data.size(); column < columns; ++column) {
+			cerr << "ROW: ";
+			switch (types[column]) {
+				case OperationTree::ScanOperation_Type_INT:
+					cerr << * ((int*) data[column] + row) <<" ";
+					break;
+				case OperationTree::ScanOperation_Type_DOUBLE:
+					cerr << * ((double*) data[column] + row) <<" ";
+					break;
+				case OperationTree::ScanOperation_Type_BOOL:
+					cerr <<  * ((bool*) data[column] + row) <<" ";
+					break;
+				}
+		}
+		cerr << endl; 
+	}
+}
+
 BlockSerializer::BlockSerializer() {
 }
 BlockSerializer::~BlockSerializer() {

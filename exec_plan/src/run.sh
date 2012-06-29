@@ -23,7 +23,7 @@ done
 
 echo PORT $PORT_NODE_0
 
-./sender localhost:$PORT_NODE_0 < $2 &
+./../grid/src/sender/sender localhost:$PORT_NODE_0 < $2 &
 
 echo $PIDS
 watch cat node_0.log
