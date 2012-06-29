@@ -8,7 +8,7 @@
 #include "MEngine.h"
 #include "node_environment.h"
 
-const int BUFF_SIZE = 10000;
+//const int BUFF_SIZE = 10000;
 
 using namespace std;
 
@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
 
       int query_no = 1;
       //int max_rows = atoi(argv[3]); // TODO remove this shit before submitting
-      int max_rows = 2;
+      int max_rows = BUFF_SIZE;
 
 
       NodeEnvironmentInterface * nei = CreateNodeEnvironment(argc, argv);
@@ -31,6 +31,7 @@ int main(int argc, char ** argv) {
 	  if(nei->my_node_number() != nei->nodes_count()-1) {
 		  nei->SendPacket(nei->my_node_number()+1, operationAscii, (int)operationAsciiLen);
 	  }
+	  //sleep(1);
 	  // tworzenie operation
 
       OperationTree::Operation operation;

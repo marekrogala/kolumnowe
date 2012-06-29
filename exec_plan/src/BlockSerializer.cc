@@ -21,7 +21,7 @@ void printCols(vector<OperationTree::ScanOperation_Type> types, vector<void*> da
 			cerr << "ROW: ";
 			switch (types[column]) {
 				case OperationTree::ScanOperation_Type_INT:
-					cerr << * ((int*) data[column] + row) <<" ";
+					cerr << * ((int32*) data[column] + row) <<" ";
 					break;
 				case OperationTree::ScanOperation_Type_DOUBLE:
 					cerr << * ((double*) data[column] + row) <<" ";

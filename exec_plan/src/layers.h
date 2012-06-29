@@ -11,7 +11,9 @@ using namespace std;
 class Layers {
 	private:
 		static int get_layer(int n) {
-			return n % 2;
+			//return n % 2;
+			return n > (number_of_nodes_ - 1)/2;
+			// NIE ZMIENIAC!!!!!!!!
 		}
 
 		static vector<int> t_[2];
@@ -19,9 +21,11 @@ class Layers {
 		static map<int, int> map_inv_[2];
 		static int node_number_;
 		static int my_layer_;
+		static int number_of_nodes_;
 
 	public:
 		static void init(int layers, NodeEnvironmentInterface * nei) {
+			number_of_nodes_ = nei->nodes_count();
 			map_.clear();
 			map_inv_[0].clear();
 			map_inv_[1].clear();

@@ -6,6 +6,7 @@
 #include "GroupSender.h"
 #include "BlockSerializer.h"
 #include "layers.h"
+#include "MEngine.h"
 
 namespace Engine {
 
@@ -42,7 +43,9 @@ struct HashFunction {
 	}
 };
 
-static const int bucket_size = 2000;
+
+static const int bucket_size = 2 * BUFF_SIZE + 20;
+static const int bucket_load_to_send = BUFF_SIZE;
 
 GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, std::vector<OperationTree::ScanOperation_Type> source_types,
 		std::vector<OperationTree::ScanOperation_Type> hash_column_types,  const OperationTree::GroupByOperation &node
@@ -86,13 +89,16 @@ void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32*
 	for (int row = 0; row < rows; ++row) {
 
 		// calculate the number of bucket
-		int bucket = hashes[row] % Layers::count_nodes_in_other_layer();
+		int p = Layers::count_nodes_in_other_layer();
+		int bucket = ((hashes[row] % p) + p) % p;
+		cerr << "BUCKET " << bucket << "\n";
+		assert(bucket < buckets_.size());
 
 		// copy the data to the bucket
 		for (int column = 0, columns = data.size(); column < columns; ++column)
 			switch (source_types_[column]) {
 				case OperationTree::ScanOperation_Type_INT:
-					std::fill_n( (int*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((int*) data[column] + row));
+					std::fill_n( (int32*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((int32*) data[column] + row));
 					break;
 				case OperationTree::ScanOperation_Type_DOUBLE:
 					std::fill_n( (double*) buckets_[bucket][column] + buckets_load_[bucket], 1, * ((double*) data[column] + row));
@@ -114,7 +120,7 @@ void GroupSender::cast_to_hash_columns(const vector<void*> &data, vector<void*> 
 
 bool GroupSender::bucket_ready_to_send(int bucket) {
 	// only example implementation
-	return buckets_load_[bucket] > 1000;
+	return buckets_load_[bucket] >= bucket_load_to_send;
 }
 
 void GroupSender::send_bucket(int bucket_number){
@@ -123,7 +129,24 @@ void GroupSender::send_bucket(int bucket_number){
 				BlockSerializer serializer;
 				cerr << "BEFORE SERIALIZATION: \n";
 				printCols(source_types_, buckets_[bucket_number], buckets_load_[bucket_number]);
-				int message_len = serializer.serializeBlock(source_types_, buckets_[bucket_number], buckets_load_[bucket_number], &serializedData);
+
+				int rows_to_send = min(buckets_load_[bucket_number], BUFF_SIZE);
+
+				std::vector<void*> columns_with_offset = buckets_[bucket_number];
+				for (int i = 0, columns = columns_with_offset.size(); i < columns; ++i)
+					switch (source_types_[i]) {
+						case OperationTree::ScanOperation_Type_INT:
+							columns_with_offset[i] = ((int32*) columns_with_offset[i]) + buckets_load_[bucket_number] - rows_to_send;
+							break;
+						case OperationTree::ScanOperation_Type_BOOL:
+							columns_with_offset[i] = ((bool*) columns_with_offset[i]) +buckets_load_[bucket_number] - rows_to_send;
+							break;
+						case OperationTree::ScanOperation_Type_DOUBLE:
+							columns_with_offset[i] = ((double*) columns_with_offset[i]) +buckets_load_[bucket_number] - rows_to_send;
+							break;
+					}
+				int message_len = serializer.serializeBlock(source_types_, columns_with_offset, rows_to_send, &serializedData);
+				//int message_len = serializer.serializeBlock(source_types_, buckets_[bucket_number], buckets_load_[bucket_number], &serializedData);
 				// ...
 				cerr << "AFTER DESRIALIZATION: \n";
 				vector<void*> bufs;
@@ -139,7 +162,8 @@ void GroupSender::send_bucket(int bucket_number){
 				nei_ -> SendPacket(who, serializedData, message_len);
 
 				// reset this bucket
-				buckets_load_[bucket_number] = 0;
+				buckets_load_[bucket_number] -= rows_to_send;
+				//buckets_load_[bucket_number] = 0;
 }
 
 vector<void*> GroupSender::pull(int &rows) {
@@ -156,7 +180,7 @@ vector<void*> GroupSender::pull(int &rows) {
 				cerr << "ROW: ";
 				switch (source_types_[column]) {
 					case OperationTree::ScanOperation_Type_INT:
-						cerr << * ((int*) data[column] + row) <<" ";
+						cerr << * ((int32*) data[column] + row) <<" ";
 						break;
 					case OperationTree::ScanOperation_Type_DOUBLE:
 						cerr << * ((double*) data[column] + row) <<" ";
@@ -196,7 +220,9 @@ vector<void*> GroupSender::pull(int &rows) {
 		if (buckets_load_[i] > 0) {
 			send_bucket(i);
 		}
-		send_bucket(i);
+				int who = Layers::get_real_node_number(1 - Layers::get_my_layer(), i);
+				nei_ -> SendPacket(who, NULL, 0);
+	//	send_bucket(i);
 	}
 	
 	// this is dummy return value

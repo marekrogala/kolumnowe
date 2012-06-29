@@ -7,9 +7,13 @@
 #include <iostream>
 #include <vector>
 
+#define BUFF_SIZE 2
+
 using namespace std;
 
 namespace Engine {
+
+
     class MEngine {
 
         public:

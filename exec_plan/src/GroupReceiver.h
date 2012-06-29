@@ -15,7 +15,8 @@ class GroupReceiver : public Operation {
 		std::vector<OperationTree::ScanOperation_Type> source_types_;
 		int worker_id;
 		Operation *source_;
-		std::vector<void*>  buffers_;
+		int eofs_to_be_received;
+//		std::vector<void*>  buffers_;
 
 	public:
 		std::vector<void*> pull(int &rows);
