@@ -14,7 +14,7 @@ GroupReceiver::GroupReceiver(NodeEnvironmentInterface *nei,
 
 std::vector<void*> GroupReceiver::pull(int &rows) {
 	cerr << "GroupReceiver::pull " << rows << endl;	
-	char *data;
+	char *data = NULL;
 	size_t data_len;
 	if (source_ != NULL) {
 		source_ -> pull(rows);
@@ -27,6 +27,9 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 		do {
 			if(eofs_to_be_received == 0)
 				break;
+				
+			if(data != NULL) { free(data); data = NULL; }
+		  
 		  data = nei_->ReadPacketBlocking(&data_len);
 			cerr <<data_len << endl;
 		  if(data_len == 0) eofs_to_be_received--;
@@ -40,6 +43,9 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 		BlockSerializer serializer;
 		std::vector<void*> buffers;
 		rows = serializer.deserializeBlock(source_types_, data_len, data, buffers);
+		
+		if(data != NULL) { free(data); data = NULL; }
+		
 		cerr << "RECIVED: \n";
 		printCols(source_types_, buffers, rows);
 		cerr << "END\n";
@@ -59,8 +65,6 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 	//			}
 	//			cerr << endl; 
 	//	}
-
-		// TODO - deallocate data block
 
 		return buffers;
 }

@@ -206,6 +206,13 @@ vector<void*> GroupSender::pull(int &rows) {
 
 		scatter_data_into_buckets(data, rows, hashes);
 		cerr << "4 GROUPSENDER ASFSDFSDFSD\n";
+		
+		delete hashes;
+
+// tego chyba nie mozemy czyscic, bo jest wielokrotnie uzywane?
+//		for(unsigned i = 0; i < data.size(); i++){
+//		  free(data[i]);
+//		}
 
 		cerr << "GROUPSENDER ASFSDFSDFSD\n";
 		for(int i = 0, buckets_no = buckets_.size(); i < buckets_no; ++i)
@@ -223,6 +230,12 @@ vector<void*> GroupSender::pull(int &rows) {
 				int who = Layers::get_real_node_number(1 - Layers::get_my_layer(), i);
 				nei_ -> SendPacket(who, NULL, 0);
 	//	send_bucket(i);
+	}
+	
+	//all data sent, free all buckets (all should be empty)
+	for (int i = 0; i < Layers::count_nodes_in_other_layer();	++i) {
+		for (int j = 0; j <source_types_.size(); ++j)
+			free(buckets_[i][j]);
 	}
 	
 	// this is dummy return value

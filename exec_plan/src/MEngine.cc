@@ -39,13 +39,11 @@ void Engine::MEngine::run() {
 			new MemoryManager(max_rows_));
 
 	if (r0.second == NULL || r1.second == NULL) {
-		cout << "KURWA na 1 "<< endl;
 		group_flag = 1;
 		Layers::init(1, nei_);
 
 	  r = root_operation_ -> init(group_flag);
 	} else {
-		cout << "KURWA na 2 "<< endl;
 		Layers::init(2, nei_);
 		group_flag = Layers::get_my_layer();
 		cerr << "My layer " << endl;

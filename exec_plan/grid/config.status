@@ -449,7 +449,7 @@ Copyright (C) 2010 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid'
+ac_pwd='/home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -950,12 +950,12 @@ S["mkdir_p"]="/bin/mkdir -p"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid/install-sh"
-S["MAKEINFO"]="${SHELL} /home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid/missing --run makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid/missing --run autoheader"
-S["AUTOMAKE"]="${SHELL} /home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid/missing --run automake-1.11"
-S["AUTOCONF"]="${SHELL} /home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid/missing --run autoconf"
-S["ACLOCAL"]="${SHELL} /home/students/jsim/l/lj277520/codwhpart2/kolumnowe/exec_plan/grid/missing --run aclocal-1.11"
+S["install_sh"]="${SHELL} /home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid/install-sh"
+S["MAKEINFO"]="${SHELL} /home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid/missing --run makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid/missing --run autoheader"
+S["AUTOMAKE"]="${SHELL} /home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid/missing --run automake-1.11"
+S["AUTOCONF"]="${SHELL} /home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid/missing --run autoconf"
+S["ACLOCAL"]="${SHELL} /home/students/jsim/m/mr277570/zcodwh/kolumnowe/exec_plan/grid/missing --run aclocal-1.11"
 S["VERSION"]="0.4"
 S["PACKAGE"]="grid_framework"
 S["CYGPATH_W"]="echo"
