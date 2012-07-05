@@ -1,0 +1,12 @@
+# SELECT col_0 + col_1;
+
+scan {
+  column: 0
+  type: INT
+  column: 1
+  type: INT
+  column: 2
+  type: DOUBLE
+  column: 3
+  type: DOUBLE
+}

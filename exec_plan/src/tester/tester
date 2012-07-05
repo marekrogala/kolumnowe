@@ -1,0 +1,68 @@
+#!/bin/bash
+
+
+
+trap 'kill $(jobs -p)' EXIT
+trap 'kill $(jobs -p)' SIGINT
+
+
+
+if [ $# -ne 3 ]
+then
+  echo "Usage $0 [number of nodes] [query_id] [data_size]"
+  exit
+fi
+
+#set -ex
+QUERY_ID=$2
+N=$3
+PROGRAM=exec_plan
+TESTS=`ls ../queries/*.ascii | wc -l`
+
+
+SERVER_PORT=2123
+MIN_CLIENT_PORT=4444
+COUNT=$1
+
+MAX_NUMBER=`expr $COUNT - 1`
+
+PIDS=""
+
+
+#for ((i = 1; i <= QCOUNT; ++i)); do
+#	echo "----- q$i.ascii"
+#	time ./$PROGRAM $i ../queries/q$i.ascii | sort > q$i.out
+#	if [ $? -eq 0 ]; then
+#		diff -q ../queries/q$i.out ../queries/q$i.expected
+#		if [ $? -eq 0 ]; then
+			echo "SUCCESS"
+#		else
+#			echo "FAIL"
+#		fi
+#	else
+#		echo "FAIL"
+#	fi
+#done
+
+
+TESTS=1
+
+
+
+  echo TEST nr $QUERY_ID
+  # odpalam grid_server
+  echo "DUPA"
+  ./grid_server $SERVER_PORT $COUNT< ../queries/q$QUERY_ID.ascii&
+  sleep 4
+  echo grid_server pid: $!
+  for i in `seq 0 $MAX_NUMBER`; do
+    if [ "$i" == "$MAX_NUMBER" ]; then sleep 3; fi;
+    echo "RUN " $QUERY $N
+    ./$PROGRAM localhost:$SERVER_PORT& 
+#    ./$PROGRAM localhost:$SERVER_PORT $QUERY_ID $N& 
+    PIDS="$PIDS $!"
+  done
+
+  echo $PIDS
+  wait
+
