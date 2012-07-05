@@ -1,0 +1,17 @@
+# SELECT col_0 + col_1;
+
+compute {
+  source {
+    scan {
+      column: 0
+      type: INT
+      column: 1
+      type: INT
+      number_of_files : 3
+    }
+  }
+expressions {
+    operator: COLUMN
+    column_id: 1
+  }
+}
