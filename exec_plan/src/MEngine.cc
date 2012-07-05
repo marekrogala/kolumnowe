@@ -101,10 +101,12 @@ void Engine::MEngine::run() {
 			}
 
 		}
+		delete sink;
 	} else {
 		// TYLKO SCAN
 		
 		while (true) {
+			// TODO: moze tak jakis delete tutaj?
 			int rows = max_rows_;
 			vector<void*> data = r.second -> pull(rows);
 			if (rows == 0) {

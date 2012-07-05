@@ -10,8 +10,15 @@ compute {
       number_of_files : 3
     }
   }
-expressions {
-    operator: COLUMN
-    column_id: 1
+  expressions {
+    operator: ADD
+    children {
+      operator: COLUMN
+      column_id: 0
+    }
+    children {
+      operator: COLUMN
+      column_id: 1
+    }
   }
 }

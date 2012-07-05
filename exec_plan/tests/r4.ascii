@@ -9,18 +9,18 @@ compute {
           type: INT
           column: 1
           type: DOUBLE
-          number_of_files : 4
+          number_of_files : 3
         }
       }
       expression {
         operator: GREATER
         children {
           operator: COLUMN
-          column_id: 0
+          column_id: 1
         }
         children {
           operator: CONSTANT
-          constant_int32: 0
+          constant_double: 0.0
         } 
       }
     }

@@ -1,11 +1,5 @@
 # SELECT SUM(a) GROUP BY b
 
-compute {
-  expressions {
-    operator: COLUMN
-    column_id: 1
-  }
-  source {    
     group_by {
       aggregations {
         type: SUM
@@ -22,5 +16,3 @@ compute {
         }
       }
     }
-  }
-}

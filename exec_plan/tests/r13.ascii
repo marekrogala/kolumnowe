@@ -1,0 +1,36 @@
+#SELECT a, count FROM (SELECT a, b, c FROM (SELECT a, b, c, d GROUP BY a, b, c, d) GROUP BY a, b, c) GROUP BY a
+
+group_by {
+	  aggregations {
+		type: COUNT
+	  }
+	  group_by_column: 0
+	source {
+		group_by {
+		  group_by_column: 0
+		  group_by_column: 1
+		  group_by_column: 2
+			source {
+				group_by {
+				  group_by_column: 0
+				  group_by_column: 1
+				  group_by_column: 2
+				  group_by_column: 3
+				  source {
+					scan {
+					  column: 0
+					  type: INT
+					  column: 1
+					  type: INT
+					  column: 2
+					  type: BOOL
+					  column: 3
+					  type: INT
+					  number_of_files : 5
+					}
+				  }
+				}
+			}
+		}
+	}
+}

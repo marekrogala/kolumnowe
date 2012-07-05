@@ -1,0 +1,7 @@
+#SELECT a, b, c, d FROM {source};
+
+scan {
+  column: 0
+  type: INT
+  number_of_files : 2
+}
