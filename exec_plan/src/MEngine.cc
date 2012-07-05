@@ -106,7 +106,6 @@ void Engine::MEngine::run() {
 		// TYLKO SCAN
 		
 		while (true) {
-			// TODO: moze tak jakis delete tutaj?
 			int rows = max_rows_;
 			vector<void*> data = r.second -> pull(rows);
 			if (rows == 0) {
@@ -121,7 +120,7 @@ void Engine::MEngine::run() {
 					&buffer);
 				nei_ -> SendPacket(0, buffer, bufferSize);
 
-				delete buffer;
+				delete[] buffer;
 
 			all_rows += rows;
 			if (debug)

@@ -53,6 +53,7 @@ GroupSender::GroupSender(NodeEnvironmentInterface *nei, Operation *source, std::
 	Operation(nei), nei_(nei), source_(source), source_types_(source_types), hash_column_types_(hash_column_types), node_(node) {
 		buckets_ = std::vector<std::vector<void*> >(Layers::count_nodes_in_other_layer());
 		buckets_load_ = std::vector<int>(Layers::count_nodes_in_other_layer());
+
 		for (int i = 0; i < Layers::count_nodes_in_other_layer();	++i) {
 			buckets_[i] = std::vector<void*>(source_types.size());
 			for (int j = 0; j <source_types.size(); ++j)
@@ -173,6 +174,7 @@ vector<void*> GroupSender::pull(int &rows) {
 
 	do {
 		data = source_->pull(rows);
+		cerr << "fdsfdsfsfds\n";
 
 		cerr << "SCOLS: " << source_types_.size() << "COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
 		for(int row = 0; row < rows; row++){
@@ -207,7 +209,7 @@ vector<void*> GroupSender::pull(int &rows) {
 		scatter_data_into_buckets(data, rows, hashes);
 		cerr << "4 GROUPSENDER ASFSDFSDFSD\n";
 		
-		delete hashes;
+		delete[] hashes;
 
 // tego chyba nie mozemy czyscic, bo jest wielokrotnie uzywane?
 //		for(unsigned i = 0; i < data.size(); i++){
