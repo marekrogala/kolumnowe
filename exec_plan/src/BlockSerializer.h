@@ -30,7 +30,7 @@ public:
 	int serializeBlock(vector<OperationTree::ScanOperation_Type> types, vector<void*> data, int rows, char ** resBuffer);
 	int deserializeBlock(vector<OperationTree::ScanOperation_Type> types, int bufferSize, char * buffer, vector<void*> & result);
 };
-void printCols(vector<OperationTree::ScanOperation_Type> types, vector<void*> data, int rows);
+//void printCols(vector<OperationTree::ScanOperation_Type> types, vector<void*> data, int rows);
 }
 
 #endif /* BLOCKSERIALIZER_H_ */

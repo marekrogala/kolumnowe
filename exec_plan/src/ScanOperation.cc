@@ -8,14 +8,14 @@ using namespace std;
 namespace Engine {
 
 InitRes ScanOperation::init(bool &group_flag) {
-    if (debug) cerr << "ScanOperation::init()" << endl;
+//    if (debug) cerr << "ScanOperation::init()" << endl;
 
 	int numberOfNodes = Layers::count_nodes_in_my_layer();
 
-	for(int i = Layers::get_my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
-		dataSources_.push_back(nei_->OpenDataSourceFile(i));
-	}
-	currentFile_ = dataSources_.begin();
+//		for(int i = Layers::get_my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
+//			dataSources_.push_back(nei_->OpenDataSourceFile(i));
+//		}
+//	currentFile_ = dataSources_.begin();
 
     int n = node_.column_size();
     for(int i = 0; i < n; ++i) {
@@ -28,7 +28,15 @@ InitRes ScanOperation::init(bool &group_flag) {
 }
 
 vector<void*> ScanOperation::pull(int &rows) {
-    cerr << "ScanOperation pull " << rows << endl;
+//    cerr << "ScanOperation pull " << rows << endl;
+
+	if(dataSources_.size() == 0) {
+			int numberOfNodes = Layers::count_nodes_in_my_layer();
+			for(int i = Layers::get_my_node_number(); i < numberOfFiles_; i+=numberOfNodes) {
+				dataSources_.push_back(nei_->OpenDataSourceFile(i));
+			}
+		currentFile_ = dataSources_.begin();
+	}
     
     if (buffers_.size() == 0) init_buffers();
     int n = columns_.size();
@@ -46,8 +54,8 @@ vector<void*> ScanOperation::pull(int &rows) {
 				int32 * buff = static_cast<int32*>(buffers_[i]);
 				while (currentFile_ != dataSources_.end()) {
 					int x = (*currentFile_) -> GetInts(columns_[i], rows_left, buff);
-					cerr << "YYYYYYY " << x << endl;
 					if (x == 0) {
+						delete (*currentFile_);
 						currentFile_++;
 					} else {
 						buff += x;
@@ -65,6 +73,7 @@ vector<void*> ScanOperation::pull(int &rows) {
 				while (currentFile_ != dataSources_.end()) {
 					int x = (*currentFile_) -> GetDoubles(columns_[i], rows_left, buff);
 					if (x == 0) {
+						delete (*currentFile_);
 						currentFile_++;
 					} else {
 						buff += x;
@@ -82,6 +91,7 @@ vector<void*> ScanOperation::pull(int &rows) {
 				while (currentFile_ != dataSources_.end()) {
 					int x = (*currentFile_) -> GetByteBools(columns_[i], rows_left, buff);
 					if (x == 0) {
+						delete (*currentFile_);
 						currentFile_++;
 					} else {
 						buff += x;
@@ -97,7 +107,7 @@ vector<void*> ScanOperation::pull(int &rows) {
     }
 
     rows = scanned;
-    cerr << "SCANNED " << rows << " " << numberOfFiles_ << endl;
+//    cerr << "SCANNED " << rows << " " << numberOfFiles_ << endl;
     return res;
 }
 

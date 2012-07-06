@@ -30,6 +30,7 @@ namespace Engine {
 			int numberOfFiles_;
 			vector<DataSourceInterface*> dataSources_;
 			vector<DataSourceInterface*>::iterator currentFile_;
+
     };
 };
 

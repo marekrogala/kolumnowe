@@ -16,7 +16,7 @@ class GroupReceiver : public Operation {
 		int worker_id;
 		Operation *source_;
 		int eofs_to_be_received;
-//		std::vector<void*>  buffers_;
+		std::vector<void*>  buffers_;
 
 	public:
 		std::vector<void*> pull(int &rows);

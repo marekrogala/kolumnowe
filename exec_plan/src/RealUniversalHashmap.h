@@ -62,7 +62,8 @@ private:
 
 	vector<OperationTree::ScanOperation_Type> hash_signature_;
 	vector<OperationTree::ScanOperation_Type> value_signature_;
-	tr1::unordered_map<HashStruct, HashStruct, hash_name> map_;
+	tr1::unordered_map<HashStruct, HashStruct, hash_name>* map2_;
+//	tr1::unordered_map<HashStruct, HashStruct, hash_name>& map_;
 
 };
 

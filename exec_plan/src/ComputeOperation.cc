@@ -14,7 +14,7 @@ ComputeOperation::ComputeOperation(NodeEnvironmentInterface * nei, const Operati
 }
 
 InitRes ComputeOperation::init(bool& group_flag) {
-	if (debug) cerr << "ComputeOperation::init()" << endl;
+//	if (debug) cerr << "ComputeOperation::init()" << endl;
 		source_ = OperationBuilder::build(nei_, node_.source(), mem_manager_);
     InitRes r = source_ -> init(group_flag);
 		source_types_ = r.first;
@@ -37,7 +37,7 @@ InitRes ComputeOperation::init(bool& group_flag) {
 }
 
 vector<void*> ComputeOperation::pull(int &rows) {
-	if(debug) cerr << "ComputeOperation::pull " << rows << endl;
+//	if(debug) cerr << "ComputeOperation::pull " << rows << endl;
 	data_ = source_ -> pull(rows);
 
 	vector<void*> res;

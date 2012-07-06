@@ -25,7 +25,7 @@ FilterOperation::FilterOperation(NodeEnvironmentInterface * nei, const Operation
 }
 
 InitRes FilterOperation::init(bool &group_flag) {
-	if (debug) cerr << "FilterOperation::init()" << endl;
+//	if (debug) cerr << "FilterOperation::init()" << endl;
 
     source_ = OperationBuilder::build(nei_, node_.source(), mem_manager_);
     InitRes r = source_ -> init(group_flag);
@@ -47,7 +47,7 @@ InitRes FilterOperation::init(bool &group_flag) {
 }
 
 vector<void*> FilterOperation::pull(int &rows) {
-	if (debug) cerr << "FilterOperation::pull " << rows << endl;
+//	if (debug) cerr << "FilterOperation::pull " << rows << endl;
 	int x = rows;
 	int y;
 	int ile_mam = 0;
@@ -100,7 +100,7 @@ vector<void*> FilterOperation::pull(int &rows) {
 				}
 			}
 
-			if (debug) cerr << "FILTER OPER " << i << " " << n_ile_mam << endl;
+//			if (debug) cerr << "FILTER OPER " << i << " " << n_ile_mam << endl;
 			if (i + 1 == source_types_.size()) { ile_mam = n_ile_mam; }
 		}
 

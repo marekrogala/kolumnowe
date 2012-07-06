@@ -40,17 +40,20 @@ int main(int argc, char ** argv) {
 
 
       if (!google::protobuf::TextFormat::ParseFromString(string(operationAscii), &operation)) {
-          cerr << "Failed to parse operation." << endl;
+          //cerr << "Failed to parse operation." << endl;
           return -1;
       }
 
 
 	    Engine::MEngine engine(nei, operation, max_rows);
       engine.run();
+	  //cerr << "after run\n";
       
 		//	delete server;
-      delete nei;
-      google::protobuf::ShutdownProtobufLibrary();
+     // delete nei;
+	 // cerr << "after delete nei\n";
+     // google::protobuf::ShutdownProtobufLibrary();
+	 // cerr << "after protobuf shut\n";
 
       return 0;
 }

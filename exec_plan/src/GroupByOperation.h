@@ -36,9 +36,11 @@ private:
             UniversalMap * map_;
             int32 * count_buffer_;
             vector<void*> res_;
+			vector<void*> res_begin_;
             vector<OperationTree::ScanOperation_Type> res_types_;
             vector<OperationTree::ScanOperation_Type> hash_signature_;
             int res_size_;
+            int res_size_all_rows_;
             bool first_time_;
             void first_pull();
 						void init_hashmap();
