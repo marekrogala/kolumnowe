@@ -4,6 +4,8 @@
 #include "GroupReceiver.h"
 #include "BlockSerializer.h"
 
+#include "ScanOperation.h"
+
 namespace Engine {
 
 GroupReceiver::GroupReceiver(NodeEnvironmentInterface *nei, 
@@ -13,14 +15,14 @@ GroupReceiver::GroupReceiver(NodeEnvironmentInterface *nei,
 	}
 
 std::vector<void*> GroupReceiver::pull(int &rows) {
-	cerr << "GroupReceiver::pull " << rows << endl;	
+//	cerr << "GroupReceiver::pull " << rows << endl;	
 	char *data = NULL;
 	size_t data_len;
 	if (source_ != NULL) {
 		source_ -> pull(rows);
 		source_ = NULL;
 	}
-		std::cerr << "Receiving..." << std::endl;
+//		std::cerr << "Receiving..." << std::endl;
 
 		//int eofs_to_be_received = Layers::count_nodes_in_other_layer();
 
@@ -28,10 +30,10 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 			if(eofs_to_be_received == 0)
 				break;
 				
-			if(data != NULL) { free(data); data = NULL; }
+			if(data != NULL) { delete[] data; data = NULL; }
 		  
 		  data = nei_->ReadPacketBlocking(&data_len);
-			cerr <<data_len << endl;
+		//	cerr <<data_len << endl;
 		  if(data_len == 0) eofs_to_be_received--;
 		} while(data_len == 0 && eofs_to_be_received > 0);
 		
@@ -41,14 +43,29 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 		}
 		
 		BlockSerializer serializer;
-		std::vector<void*> buffers;
-		rows = serializer.deserializeBlock(source_types_, data_len, data, buffers);
+		//std::vector<void*> buffers;
+		for(int i = 0; i < buffers_.size(); i++) {
+			switch(source_types_[i]) {
+				case OperationTree::ScanOperation_Type_INT:
+					delete[] (int32*)(buffers_[i]);
+					break;
+				case OperationTree::ScanOperation_Type_DOUBLE:
+					delete[] (double*)(buffers_[i]);
+					break;
+				case OperationTree::ScanOperation_Type_BOOL:
+					delete[] (bool*)(buffers_[i]);
+					break;
+
+			}
+		}
+		buffers_.clear();
+		rows = serializer.deserializeBlock(source_types_, data_len, data, buffers_);
 		
-		if(data != NULL) { free(data); data = NULL; }
+		if(data != NULL) { delete[] data; data = NULL; }
 		
-		cerr << "RECIVED: \n";
-		printCols(source_types_, buffers, rows);
-		cerr << "END\n";
+	//	cerr << "RECIVED: \n";
+	//	printCols(source_types_, buffers_, rows);
+	//	cerr << "END\n";
 	//		//cerr << "SCOLS: " << source_types_.size() << "COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
 	//		for(int row = 0; row < rows; row++){
 	//			for (int column = 0, columns = buffers_.size(); column < columns; ++column) {
@@ -66,7 +83,7 @@ std::vector<void*> GroupReceiver::pull(int &rows) {
 	//			cerr << endl; 
 	//	}
 
-		return buffers;
+		return buffers_;
 }
 
 std::vector<OperationTree::ScanOperation_Type> GroupReceiver::init() {

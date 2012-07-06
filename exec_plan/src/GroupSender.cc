@@ -92,7 +92,7 @@ void GroupSender::scatter_data_into_buckets(vector<void*> data, int rows, int32*
 		// calculate the number of bucket
 		int p = Layers::count_nodes_in_other_layer();
 		int bucket = ((hashes[row] % p) + p) % p;
-		cerr << "BUCKET " << bucket << "\n";
+//		cerr << "BUCKET " << bucket << "\n";
 		assert(bucket < buckets_.size());
 
 		// copy the data to the bucket
@@ -128,8 +128,8 @@ void GroupSender::send_bucket(int bucket_number){
 				// serialize data
 				char* serializedData;
 				BlockSerializer serializer;
-				cerr << "BEFORE SERIALIZATION: \n";
-				printCols(source_types_, buckets_[bucket_number], buckets_load_[bucket_number]);
+//				cerr << "BEFORE SERIALIZATION: \n";
+				//printCols(source_types_, buckets_[bucket_number], buckets_load_[bucket_number]);
 
 				int rows_to_send = min(buckets_load_[bucket_number], BUFF_SIZE);
 
@@ -149,18 +149,20 @@ void GroupSender::send_bucket(int bucket_number){
 				int message_len = serializer.serializeBlock(source_types_, columns_with_offset, rows_to_send, &serializedData);
 				//int message_len = serializer.serializeBlock(source_types_, buckets_[bucket_number], buckets_load_[bucket_number], &serializedData);
 				// ...
-				cerr << "AFTER DESRIALIZATION: \n";
-				vector<void*> bufs;
-				int rows = serializer.deserializeBlock(source_types_, message_len, serializedData, bufs);
-				printCols(source_types_, bufs, rows);
-				cerr << "END\n";
+				//cerr << "AFTER DESRIALIZATION: \n";
+				//vector<void*> bufs;
+				//int rows = serializer.deserializeBlock(source_types_, message_len, serializedData, bufs);
+				//printCols(source_types_, bufs, rows);
+//				cerr << "END\n";
 
 				// ...
 
 				int who = Layers::get_real_node_number(1 - Layers::get_my_layer(), bucket_number);
 				// send datas
-				cerr << "Send bucket to "<<who << endl;
+//				cerr << "Send bucket to "<<who << endl;
 				nei_ -> SendPacket(who, serializedData, message_len);
+
+				delete[] serializedData;
 
 				// reset this bucket
 				buckets_load_[bucket_number] -= rows_to_send;
@@ -168,55 +170,56 @@ void GroupSender::send_bucket(int bucket_number){
 }
 
 vector<void*> GroupSender::pull(int &rows) {
-	cerr << "GroupSender::pull " <<rows << endl;
+//	cerr << "GroupSender::pull " <<rows << endl;
 	int nrows = 0;
-	vector<void*> data;
+	int original_rows = rows;
 
 	do {
-		data = source_->pull(rows);
-		cerr << "fdsfdsfsfds\n";
+		rows = original_rows;
+		vector<void*> data = source_->pull(rows);
+	//	cerr << "fdsfdsfsfds\n";
 
-		cerr << "SCOLS: " << source_types_.size() << "COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
-		for(int row = 0; row < rows; row++){
-			for (int column = 0, columns = data.size(); column < columns; ++column) {
-				cerr << "ROW: ";
-				switch (source_types_[column]) {
-					case OperationTree::ScanOperation_Type_INT:
-						cerr << * ((int32*) data[column] + row) <<" ";
-						break;
-					case OperationTree::ScanOperation_Type_DOUBLE:
-						cerr << * ((double*) data[column] + row) <<" ";
-						break;
-					case OperationTree::ScanOperation_Type_BOOL:
-						cerr <<  * ((bool*) data[column] + row) <<" ";
-						break;
-					}
-			}
-			cerr << endl; 
-	}
+	//	cerr << "SCOLS: " << source_types_.size() << "COLS: " <<data.size() <<" ROWS: "<< rows << "\n";
+	//	for(int row = 0; row < rows; row++){
+	//		for (int column = 0, columns = data.size(); column < columns; ++column) {
+	//			cerr << "ROW: ";
+	//			switch (source_types_[column]) {
+	//				case OperationTree::ScanOperation_Type_INT:
+	//					cerr << * ((int32*) data[column] + row) <<" ";
+	//					break;
+	//				case OperationTree::ScanOperation_Type_DOUBLE:
+	//					cerr << * ((double*) data[column] + row) <<" ";
+	//					break;
+	//				case OperationTree::ScanOperation_Type_BOOL:
+	//					cerr <<  * ((bool*) data[column] + row) <<" ";
+	//					break;
+	//				}
+	//		}
+	//		cerr << endl; 
+	//	}
 
-		cerr << "1 GROUPSENDER ASFSDFSDFSD\n";
+	//	cerr << "1 GROUPSENDER ASFSDFSDFSD\n";
 
 		// cast columns to columns for which we computw hashes
 		vector<void*> hashed_columns_data;
 
 		cast_to_hash_columns(data, hashed_columns_data);
-		cerr << "2 GROUPSENDER ASFSDFSDFSD\n";
+	//	cerr << "2 GROUPSENDER ASFSDFSDFSD\n";
 	
 		int32* hashes = count_hashes(hashed_columns_data, hash_column_types_, rows);
-		cerr << "3 GROUPSENDER ASFSDFSDFSD\n";
+//		cerr << "3 GROUPSENDER ASFSDFSDFSD\n";
 
 		scatter_data_into_buckets(data, rows, hashes);
-		cerr << "4 GROUPSENDER ASFSDFSDFSD\n";
+//		cerr << "4 GROUPSENDER ASFSDFSDFSD\n";
 		
 		delete[] hashes;
 
-// tego chyba nie mozemy czyscic, bo jest wielokrotnie uzywane?
-//		for(unsigned i = 0; i < data.size(); i++){
-//		  free(data[i]);
-//		}
+  	// tego chyba nie mozemy czyscic, bo jest wielokrotnie uzywane?
+  	//		for(unsigned i = 0; i < data.size(); i++){
+  	//		  free(data[i]);
+  	//		}
 
-		cerr << "GROUPSENDER ASFSDFSDFSD\n";
+//		cerr << "GROUPSENDER ASFSDFSDFSD\n";
 		for(int i = 0, buckets_no = buckets_.size(); i < buckets_no; ++i)
 			if (bucket_ready_to_send(i)) {
 				send_bucket(i);

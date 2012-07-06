@@ -129,16 +129,16 @@ void GroupByOperation::init_hashmap() {
 	}
 
 	if (map_ == NULL) {
-		cerr << "YEEEEEEEEEEEEEEEEEEEEES !!!" << hash_signature.size() << " " << value_signature.size() << endl;
-		for(int i = 0; i < value_signature.size(); ++i) {
-			cerr << hash_signature[i] << " ";
-		} cerr << endl;
+	//	cerr << "YEEEEEEEEEEEEEEEEEEEEES !!!" << hash_signature.size() << " " << value_signature.size() << endl;
+	//	for(int i = 0; i < value_signature.size(); ++i) {
+	//		cerr << hash_signature[i] << " ";
+	//	} cerr << endl;
 		map_ = new RealUniversalHashmap(hash_signature, value_signature);
 	}
 }
 
 void GroupByOperation::first_pull() {
-	if (debug) cerr << "GroupByOperation::first_pull" << endl;
+//	if (debug) cerr << "GroupByOperation::first_pull" << endl;
 while (true) {
 		int x = mem_manager_ -> max_rows();
 		vector<void*> data = source_ -> pull(x);
@@ -181,11 +181,25 @@ while (true) {
 		}
 }
 	res_ = map_ -> get_result(res_size_);
+	//delete map_;
+
+	// ...
+	for(int i = 0; i < res_.size(); i++) {
+		res_begin_.push_back(res_[i]);
+	}
+
+	res_size_all_rows_ = res_size_;
 
 }
 
 vector<void*> GroupByOperation::pull(int &rows) {
-	if (debug) cerr << "GroupByOperation::pull" << endl;
+//	rows = 0;
+//	vector<void*> res = vector<void*>();
+//	for (int i = 0;  i < res_types_.size(); ++i)
+//		res.push_back(0);
+//	return res;
+	
+//	if (debug) cerr << "GroupByOperation::pull" << endl;
 	if (first_time_) {
 		first_time_ = false;
 		first_pull();
@@ -219,6 +233,14 @@ vector<void*> GroupByOperation::pull(int &rows) {
 			break;
 		}
 	}
+
+	//...
+	if(rows == 0) {
+		for(int i = 0; i< res_.size(); i++) {
+			free(res_begin_[i]);
+		}
+	}
+
 	return resx;
 }
 

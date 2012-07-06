@@ -9,9 +9,9 @@
 #define DEBUG_H_
 
 #ifdef DEBUG
-const bool debug = true;
+const bool debug = false;
 #else
-const bool debug = true;
+const bool debug = false;
 #endif
 
 #endif /* DEBUG_H_ */

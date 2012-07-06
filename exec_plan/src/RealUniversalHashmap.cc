@@ -11,8 +11,8 @@ namespace Engine {
 
 RealUniversalHashmap::RealUniversalHashmap(vector<OperationTree::ScanOperation_Type> hash_signature,
 		vector<OperationTree::ScanOperation_Type> value_signature) :
-			hash_signature_(hash_signature), value_signature_(value_signature) {
-	cerr << "Creating RealUniversal!!!!!!!!!!" << endl;
+			hash_signature_(hash_signature), value_signature_(value_signature), map2_(new tr1::unordered_map<HashStruct, HashStruct, hash_name>()) {
+//	cerr << "Creating RealUniversal!!!!!!!!!!" << endl;
 }
 
 bool operator==(const RealUniversalHashmap::HashStruct&l, const RealUniversalHashmap::HashStruct&r) {
@@ -42,8 +42,8 @@ void RealUniversalHashmap::insert(vector<void*> hash, vector<void*> value, int r
 			}
 		}
 
-		tr1::unordered_map<HashStruct, HashStruct>::iterator x = map_.find(h);
-		if (x == map_.end()) {
+		tr1::unordered_map<HashStruct, HashStruct>::iterator x = map2_->find(h);
+		if (x == map2_->end()) {
 			for(int j = 0; j < value_signature_.size(); ++j) {
 				if (value_signature_[j] == SINT) {
 					v.t[j].i = (static_cast<int32*>(value[j]))[i];
@@ -51,7 +51,7 @@ void RealUniversalHashmap::insert(vector<void*> hash, vector<void*> value, int r
 					v.t[j].d = (static_cast<double*>(value[j]))[i];
 				}
 			}
-			map_[h] = v;
+			(*map2_)[h] = v;
 		} else {
 			for(int j = 0; j  < value_signature_.size(); ++j) {
 				if (value_signature_[j] == SINT) {
@@ -65,7 +65,7 @@ void RealUniversalHashmap::insert(vector<void*> hash, vector<void*> value, int r
 }
 
 vector<void*> RealUniversalHashmap::get_result(int & size) {
-	size = map_.size();
+	size = map2_->size();
 	vector<void*> res;
 	for(int i = 0; i < hash_signature_.size(); ++i) {
 		if (hash_signature_[i] == SINT) {
@@ -85,7 +85,7 @@ vector<void*> RealUniversalHashmap::get_result(int & size) {
 
 	int z = 0;
 
-	for(tr1::unordered_map<HashStruct, HashStruct>::iterator x = map_.begin(); x != map_.end(); ++x) {
+	for(tr1::unordered_map<HashStruct, HashStruct>::iterator x = map2_->begin(); x != map2_->end(); ++x) {
 		// XXX maybe change the order of the loops to optimize?
 
 	for(int i = 0; i < hash_signature_.size(); ++i) {
@@ -110,6 +110,7 @@ vector<void*> RealUniversalHashmap::get_result(int & size) {
 	++z;
 	}
 
+	delete map2_;
 	return res;
 }
 

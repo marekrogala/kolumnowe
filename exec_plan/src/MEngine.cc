@@ -11,7 +11,7 @@ Engine::MEngine::MEngine(NodeEnvironmentInterface * nei,
 	}
 
 void Engine::MEngine::run() {
-	cerr << "Started running query." << endl;
+//	cerr << "Started running query." << endl;
 
 	Layers::init(1, nei_);
 
@@ -22,8 +22,6 @@ void Engine::MEngine::run() {
 
 	InitRes r0 = root_operation_ -> init(group_flag);
 
-	cout << "FDJFKLSDJLFJSLK"<<endl;
-	cout << flush;
 	group_flag = 0;
 
 	root_operation_ = OperationBuilder::build(nei_, operation_,
@@ -31,8 +29,6 @@ void Engine::MEngine::run() {
 
 
 	InitRes r1 = root_operation_ -> init(group_flag);
-
-	cout << "DOOOOOOOOOOOOOOOOOOOONE " << endl;
 
 	InitRes r;
 	root_operation_ = OperationBuilder::build(nei_, operation_,
@@ -46,17 +42,16 @@ void Engine::MEngine::run() {
 	} else {
 		Layers::init(2, nei_);
 		group_flag = Layers::get_my_layer();
-		cerr << "My layer " << endl;
 	  r = root_operation_ -> init(group_flag);
 	}
 
 	Types types = r.first;
 
-  cerr << "Result type" << endl;
-  for (int i = 0; i < types.size(); ++i) {
-	  cerr << types[i] << " ";
-  }
-  cerr << endl;
+  //cerr << "Result type" << endl;
+  //for (int i = 0; i < types.size(); ++i) {
+  //    cerr << types[i] << " ";
+  //}
+  //cerr << endl;
 
 	int all_rows = 0;
 	BlockSerializer blockSerializer;
@@ -68,34 +63,35 @@ void Engine::MEngine::run() {
 		size_t len;
 		while (ile) {
 
-			cerr << "Worker " << nei_ -> my_node_number() << " waiting for packet" << endl;
+			//cerr << "Worker " << nei_ -> my_node_number() << " waiting for packet" << endl;
 			char * buffer = nei_ -> ReadPacketBlocking(&len);
 			if (len == 0) {
-				cerr << "Somebody ended." << endl;
+			//	cerr << "Somebody ended." << endl;
 				ile--;
 				continue;
 			}
-			cerr << "Worker " << nei_ -> my_node_number() << " got packet size = " << len << endl;
+			//cerr << "Worker " << nei_ -> my_node_number() << " got packet size = " << len << endl;
 			vector<void*> data;
 
 			int rows = blockSerializer.deserializeBlock(types, len, buffer, data);
+			delete[] buffer;
 			all_rows += rows;
-			cerr << "Worker " << nei_ -> my_node_number() << " rows " << rows << endl;
+			//cerr << "Worker " << nei_ -> my_node_number() << " rows " << rows << endl;
 			for (int i = 0; i < types.size(); ++i) {
 				switch (types[i]) {
 				case SINT:
 					sink -> ConsumeInts(i, rows, static_cast<int32*> (data[i]));
-							delete static_cast<int32*>(data[i]);
+							delete[] static_cast<int32*>(data[i]);
 					break;
 				case SDOUBLE:
 					sink -> ConsumeDoubles(i, rows,
 							static_cast<double*> (data[i]));
-							delete static_cast<double*>(data[i]);
+							delete[] static_cast<double*>(data[i]);
 					break;
 				case SBOOL:
 					sink -> ConsumeByteBools(i, rows,
 							static_cast<bool*> (data[i]));
-							delete static_cast<bool*>(data[i]);
+							delete[] static_cast<bool*>(data[i]);
 					break;
 				}
 			}
@@ -113,9 +109,9 @@ void Engine::MEngine::run() {
 				break;
 			}
 			char * buffer;
-			cerr << "SENDING TO 0: \n";
-			printCols(types, data, rows);
-			cerr << "END\n";
+			//cerr << "SENDING TO 0: \n";
+			//printCols(types, data, rows);
+			//cerr << "END\n";
 			int bufferSize = blockSerializer.serializeBlock(types, data, rows,
 					&buffer);
 				nei_ -> SendPacket(0, buffer, bufferSize);
@@ -123,19 +119,17 @@ void Engine::MEngine::run() {
 				delete[] buffer;
 
 			all_rows += rows;
-			if (debug)
-				cerr << "Worker " << nei_ -> my_node_number() << " GOT "
-						<< rows << " ROWS" << endl;
+		//	if (debug)
+		//		cerr << "Worker " << nei_ -> my_node_number() << " GOT "
+		//				<< rows << " ROWS" << endl;
 
 
 		}
 	}
 
-		cerr << "=============================" << endl;
-		cerr << "Worker " << nei_ -> my_node_number() << " Consumed " << all_rows << " rows " << endl;
-		cerr << "Completed query." << endl;
-		cerr << flush;
-		cout << flush;
+		//cerr << "=============================" << endl;
+		//cerr << "Worker " << nei_ -> my_node_number() << " Consumed " << all_rows << " rows " << endl;
+		//cerr << "Completed query." << endl;
 
 }
 

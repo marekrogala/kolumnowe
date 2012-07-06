@@ -40,7 +40,7 @@ ExpressionNode::ExpressionNode(const OperationTree::Expression * expr, Operation
 	}
 
 OperationTree::ScanOperation_Type ExpressionNode::init() {
-	if (debug) cerr << "ExpressionNode::init() " << t_.size() << endl;
+//	if (debug) cerr << "ExpressionNode::init() " << t_.size() << endl;
 		for(size_t i = 0; i < t_.size(); ++i) {
 			types_.push_back(t_[i] -> init());
 		}
